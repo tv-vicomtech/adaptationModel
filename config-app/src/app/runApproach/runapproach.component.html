@@ -1,0 +1,165 @@
+
+
+<table>
+  <tr>
+  <th valign="top">
+    <br><br>
+  <div>RUN STEP 1</div>
+  <div style='border: solid 1px'>
+  <div>
+
+
+
+
+  <div>ADD DEVICES</div>
+  <input type='button' value="Add mobile"  (click)='addDevToApp("mobile")'>
+  <input type='button' value="Add tablet"  (click)='addDevToApp("tablet")'>
+  <input type='button' value="Add computer"  (click)='addDevToApp("computer")'>
+  <input type='button' value="Add smartTV"  (click)='addDevToApp("smartTv")'>
+  </div>
+
+  <br>
+  <div>
+  <div>ADD COMPONENTS</div>
+  <input type='button' value="Add main"  (click)='addCompToApp("main")'>
+  <input type='button' value="Add video"  (click)='addCompToApp("video")'>
+  <input type='button' value="Add banner"  (click)='addCompToApp("banner")'>
+  <input type='button' value="Add staticData"  (click)='addCompToApp("staticData")'>
+  <input type='button' value="Add dynamicData"  (click)='addCompToApp("dynamicData")'>
+  <input type='button' value="Add social"  (click)='addCompToApp("social")'>
+  <input type='button' value="Add UGC"  (click)='addCompToApp("UGC")'>
+  <input type='button' value="Add advertisement"  (click)='addCompToApp("advertisement")'>
+  </div>
+
+  <br>
+  <div>COMPONENTS IN APP</div>
+  <div *ngFor='let c of compsInApp'>
+    <i class="fas fa-trash-alt" (click)='delete()' id='{{c}}_deletefromcompsinapp_'></i>{{c}}
+  </div>
+
+  <br>
+  <div>DEVICES IN APP</div>
+  <div *ngFor='let d of devsInApp'>
+    <i class="fas fa-trash-alt" (click)='delete()' id='{{d}}_deletefromdevsinapp_'></i>{{d}}
+  </div>
+
+  <input type='button' value="Run Approach"  (click)='runSelectedApproach()'>
+  <br>
+
+  </div>
+  </th>
+  </tr>
+
+
+  <tr>
+  <th valign="top">
+    <br><br>
+
+    <div style='border: solid 1px'>
+
+      <div>AFFINITY RESULTS STEP 1</div>
+      <table style='border: 1px solid black'>
+        <td></td><td *ngFor='let d of devsInApp' style='width:25px;border: 1px solid black '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{d}}</div></td>
+        <tr style='border: 1px solid black' *ngFor='let c of compsInApp; let i=index;'>
+            <td style='border: 1px solid black'>{{c}}</td>
+            <td style='border: 1px solid black' *ngFor='let d of devsInApp;let j=index;'>
+              <div *ngIf='affResults1[i] && affResults1[i][j]&& j==bestAffs1[i]' style='background-color:green;'>{{affResults1[i][j]}}</div>
+              <div *ngIf='affResults1[i] && affResults1[i][j]&& j!=bestAffs1[i]' >{{affResults1[i][j]}}</div>
+
+            </td>
+        </tr>
+      </table>
+      <div>Step 1 evaluation: {{evStep1}}</div>
+      <br><br>
+    <div  >
+      <table style='border: 1px solid black'>
+        <tr style='border: 1px solid black'>
+          <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td>
+        </tr>
+        <tr style='border: 1px solid black' *ngFor='let a of assignments; let i=index;'>
+          <td style='border: 1px solid black'>Assignment {{i}}</td>
+          <td style='border: 1px solid black'>{{a[0]}}</td>
+          <td style='border: 1px solid black'>{{a[1]}}</td>
+
+        </tr>
+      </table>
+    </div>
+
+    <!-- <input type='button' value="calculate Step2"  (click)='calculateStep2()'>-->
+    <br><br>
+    <div>AFFINITY RESULTS STEP 2</div>
+    <table style='border: 1px solid black'>
+      <td></td><td *ngFor='let l of dataService.layouts' style='width:25px;border: 1px solid black '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{l}}</div></td>
+      <tr style='border: 1px solid black' *ngFor='let a of assignments; let i=index;'>
+          <td style='border: 1px solid black'>Assignment {{i}} </td>
+          <td style='border: 1px solid black' *ngFor='let l of dataService.layouts;let j=index;'>
+            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j==bestAffs2[i]' style='background-color:green;'>{{affResults2[i][j]}}</div>
+            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j!=bestAffs2[i]' >{{affResults2[i][j]}}</div>
+
+          </td>
+      </tr>
+    </table>
+      <div>Step 2 evaluation: {{evStep2}}</div>
+
+
+  </div>
+    <div>Global evaluation: {{evGlobal}}</div>
+
+  </th>
+  </tr>
+  <tr>
+    <th>
+      <input type='button' value='Try all' (click)=tryAllStep1()>
+      <div *ngFor='let ar of allResults;let j=index;'>
+        Iteration {{j}}
+        <table *ngIf='j==maxInd' style='border: 1px solid black;background:red;'>
+          <tr style='border: 1px solid black'>
+            <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td><td style='border: 1px solid black'>Layout</td><td style='border: 1px solid black'>Step1</td><td style='border: 1px solid black'>Step2</td><td style='border: 1px solid black'>Global</td>
+          </tr>
+          <tr style='border: 1px solid black' *ngFor='let a of ar[0]; let i=index;'>
+            <td style='border: 1px solid black'>Assignment {{i}}</td>
+            <td style='border: 1px solid black'>{{a[0]}}</td>
+            <td style='border: 1px solid black'>{{a[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[2][i]}}</td>
+            <td style='border: 1px solid black'>{{ar[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[3]}}</td>
+            <td style='border: 1px solid black'>{{ar[4]}}</td>
+          </tr>
+        </table>
+
+        <table *ngIf='j!=maxInd && j!=minInd' style='border: 1px solid black;'>
+          <tr style='border: 1px solid black'>
+            <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td><td style='border: 1px solid black'>Layout</td><td style='border: 1px solid black'>Step1</td><td style='border: 1px solid black'>Step2</td><td style='border: 1px solid black'>Global</td>
+          </tr>
+          <tr style='border: 1px solid black' *ngFor='let a of ar[0]; let i=index;'>
+            <td style='border: 1px solid black'>Assignment {{i}}</td>
+            <td style='border: 1px solid black'>{{a[0]}}</td>
+            <td style='border: 1px solid black'>{{a[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[2][i]}}</td>
+            <td style='border: 1px solid black'>{{ar[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[3]}}</td>
+            <td style='border: 1px solid black'>{{ar[4]}}</td>
+          </tr>
+        </table>
+
+        <table *ngIf=' j==minInd' style='border: 1px solid black;background:yellow;'>
+          <tr style='border: 1px solid black'>
+            <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td><td style='border: 1px solid black'>Layout</td><td style='border: 1px solid black'>Step1</td><td style='border: 1px solid black'>Step2</td><td style='border: 1px solid black'>Global</td>
+          </tr>
+          <tr style='border: 1px solid black' *ngFor='let a of ar[0]; let i=index;'>
+            <td style='border: 1px solid black'>Assignment {{i}}</td>
+            <td style='border: 1px solid black'>{{a[0]}}</td>
+            <td style='border: 1px solid black'>{{a[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[2][i]}}</td>
+            <td style='border: 1px solid black'>{{ar[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[3]}}</td>
+            <td style='border: 1px solid black'>{{ar[4]}}</td>
+          </tr>
+        </table>
+
+
+      </div>
+
+    </th>
+  </tr>
+</table>

@@ -1,0 +1,32 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<html>
+
+<div class="main">
+<div class="container">
+ <div class="row">
+ <div class="col-md-12">
+<nav class="navbar navbar-expand-md navbar-blue">
+  <a>
+    <span class="site-name">Multi-device adaptation configuration</span>
+  </a>
+
+  <button class="navbar-toggler ml-auto custom-toggler" type="button" data-toggle="collapse"
+                  (click)="isCollapsed = !isCollapsed">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    <div class="collapse navbar-collapse"[ngbCollapse]="isCollapsed"id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto" routerLinkActive="active">
+            <li class="navbar-link "><a class="text-center" routerLink="loadparam">Load Parameters</a></li>
+            <li class="navbar-link"><a class="text-center" routerLink="runapproach">Run Approach</a></li>
+
+        </ul>
+    </div>
+</nav>
+</div>
+</div>
+</div>
+</div>
+
+<router-outlet></router-outlet>
+
+</html>
