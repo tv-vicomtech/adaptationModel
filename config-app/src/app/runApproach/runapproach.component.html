@@ -96,6 +96,9 @@
             <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j==bestAffs2[i]' style='background-color:green;'>{{affResults2[i][j]}}</div>
             <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j!=bestAffs2[i]' >{{affResults2[i][j]}}</div>
 
+            <div>O:{{auxResults2Out[i][j]}}</div>
+            <div>I:{{auxResults2Int[i][j]}}</div>
+
           </td>
       </tr>
     </table>
