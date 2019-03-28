@@ -329,15 +329,15 @@ export class RunapproachComponent {
         }*/
 
         aInAllL.push((this.compTypeFactor*_this.compTypeAffl+this.devTypeFactor*_this.devTypeAffl+this.compNumFactor*_this.compNumAffl+this.devNumFactor*_this.devNumAffl).toFixed(2));
-        console.log(l);
-        console.log("compTypeFactor:"+_this.compTypeFactor+
-        " compTypeAff:"+_this.compTypeAffl+
-        " devTypeFactor:"+this.devTypeFactor+
-        " devTypeAff:"+_this.devTypeAffl+
-        "compNumFactor:"+_this.compNumFactor+
-        " compNumAff:"+_this.compNumAffl+
-        " devNumFactor:"+this.devNumFactor+
-        " devNumAff:"+_this.devNumAffl);
+        //console.log(l);
+      //  console.log("compTypeFactor:"+_this.compTypeFactor+
+      //  " compTypeAff:"+_this.compTypeAffl+
+      //  " devTypeFactor:"+this.devTypeFactor+
+      //  " devTypeAff:"+_this.devTypeAffl+
+      //  "compNumFactor:"+_this.compNumFactor+
+      //  " compNumAff:"+_this.compNumAffl+
+        //" devNumFactor:"+this.devNumFactor+
+        //" devNumAff:"+_this.devNumAffl);
 
       });
       this.affResults2.push(aInAllL);
@@ -481,7 +481,9 @@ export class RunapproachComponent {
       if(minS<=minSThres || maxE>=maxEThres){
         outputCap=0;
       }
-
+      if(outputCap==0){
+        interactivity=0;
+      }
       var affLayout =parseFloat(((0.6*outputCap  + 0.4*interactivity ) ).toFixed(2));
       return{'affLayout': affLayout, 'outputCap':outputCap,'interactivity':interactivity};
     }
@@ -543,6 +545,9 @@ export class RunapproachComponent {
 
       if(minS<=minSThres){
         outputCap=0;
+      }
+      if(outputCap==0){
+        interactivity=0;
       }
 
       var affLayout =parseFloat(((0.6*outputCap  + 0.4*interactivity ) ).toFixed(2));
@@ -708,7 +713,7 @@ export class RunapproachComponent {
         }
         _this.affResults2.push(aInAllL);
       });
-      console.log('aAA');
+      //console.log('aAA');
 
       this.bestAffs2=[];
       this.affResults2.forEach((c)=>{
@@ -954,15 +959,15 @@ export class RunapproachComponent {
 
         aInAllL.push((this.compTypeFactor*compTypeAffl+this.devTypeFactor*devTypeAffl+this.compNumFactor*compNumAffl+this.devNumFactor*devNumAffl).toFixed(2));
 
-        console.log(l);
-        console.log("compTypeFactor:"+_this.compTypeFactor+
-        " compTypeAff:"+_this.compTypeAffl+
-        " devTypeFactor:"+this.devTypeFactor+
-        " devTypeAff:"+_this.devTypeAffl+
-        "compNumFactor:"+_this.compNumFactor+
-        " compNumAff:"+_this.compNumAffl+
-        " devNumFactor:"+this.devNumFactor+
-        " devNumAff:"+_this.devNumAffl);
+        //console.log(l);
+        //console.log("compTypeFactor:"+_this.compTypeFactor+
+      //  " compTypeAff:"+_this.compTypeAffl+
+        //" devTypeFactor:"+this.devTypeFactor+
+        //" devTypeAff:"+_this.devTypeAffl+
+      //  "compNumFactor:"+_this.compNumFactor+
+        //" compNumAff:"+_this.compNumAffl+
+      //  " devNumFactor:"+this.devNumFactor+
+      //  " devNumAff:"+_this.devNumAffl);
       });
       this.affResults2All.push(aInAllL);
     });
@@ -996,10 +1001,10 @@ export class RunapproachComponent {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var json = JSON.parse(xhr.responseText);
-            console.log(json);
+            //console.log(json);
 
             for(var i=0;i<json.length;i++){
-              console.log('Iteration:'+i+" ------------------------------------------------------------------------------");
+              //console.log('Iteration:'+i+" ------------------------------------------------------------------------------");
               _this.assignmentsAll=[];
               _this.evStep1All=0;
               for(var j=0;j<json[0].length;j++){
