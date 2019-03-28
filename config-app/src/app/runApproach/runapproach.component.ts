@@ -180,7 +180,9 @@ export class RunapproachComponent {
         var max = c.reduce((acc,curr) => curr > acc ? curr : acc);
         var res = c.reduce((acc,curr,idx) => curr === max ? [...acc, idx] : acc, []);
         if(res.length>1){
-            var maxPropInd=Object.values(this.dataService.getCompObj()[this.compsInApp[i]]).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+            var auxArr:any=[];
+            auxArr = Object.values(this.dataService.getCompObj()[this.compsInApp[i]]);
+            var maxPropInd=auxArr.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
             var val=0;
             var idx=0;
             for(var j=0;j<res.length;j++){
