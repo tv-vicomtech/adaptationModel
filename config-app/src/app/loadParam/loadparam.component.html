@@ -14,12 +14,17 @@
 
 <input #compProp type='textbox'>
 <input type='button' value='add compProp' (click)='addCompProp()'>
+
 <table id='savedCompProps'>
   <tr *ngFor='let c of dataService.comps'>
     <div><b>{{c}}</b></div>
     <table>
       <tr *ngFor='let cp of dataService.compProps'>
-      <td><i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcomps_{{c}}'></i></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c][cp]}}' (change)='compPropChanged($event)'></td>
+      <td><i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsprops_{{c}}'></i></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["properties"][cp]}}' (change)='compPropChanged($event)'></td>
+      </tr>
+      <br>
+      <tr *ngFor='let cp of dataService.compDims'>
+      <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsdims_{{c}}'></i>--></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["dimensions"][cp]}}' (change)='compDimChanged($event)'></td>
       </tr>
       <br>
     </table>
@@ -32,12 +37,17 @@
 <th valign="top">
 <input #devProp type='textbox'>
 <input type='button' value='add devProp' (click)='addDevProp()'>
+
 <table id='savedDevProps'>
   <tr *ngFor='let d of dataService.devs'>
     <b><div>{{d}}</div></b>
     <table>
       <tr *ngFor='let dp of dataService.devProps'>
-        <td><i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevs_{{d}}'></i></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d][dp]}}' (change)='devPropChanged($event)'></td>
+        <td><i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsprops_{{d}}'></i></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["properties"][dp]}}' (change)='devPropChanged($event)'></td>
+      </tr>
+      <br>
+      <tr *ngFor='let dp of dataService.devDims'>
+        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
       </tr>
       <br>
     </table>
@@ -75,31 +85,31 @@
 
 
 
-<!--<tr>
+<tr>
 
 <th valign="top">
   <br><br>
-<div>STEP 2 PROPERTIES</div>
+<div>STEP 2 PARAMETERS</div>
 <div style='border: solid 1px'>
 <br>
-<input #layoutProp type='textbox'>
-<input type='button' value='add layoutProp' (click)='addLayoutProp()'>
-<table id='savedLayoutProps'>
-  <tr *ngFor='let l of dataService.layouts'>
-    <b><div>{{l}}</div></b>
-    <table>
-      <tr *ngFor='let lp of dataService.layoutProps'>
-        <td><i class="fas fa-trash-alt" (click)='delete()' id='{{lp}}_deletefromlayouts_{{l}}'></i></td><td>{{lp}}</td><td><input id='{{lp}}_of_{{l}}' type='textbox' value='{{dataService.layoutObj[l][lp]}}' (change)='layoutPropChanged($event)'></td>
-      </tr>
-      <br>
-    </table>
+
+
+
+<table>
+  <tr>Criteria</tr>
+  <tr *ngFor='let c of dataService.criteria; let i=index'>
+    <td>{{c}}</td><td><input id='{{c}}' type='textbox' value='{{dataService.criteriaVal[i]}}' (change)='criteriaValueChanged($event)'></td>
   </tr>
+  <br>
 </table>
+
+
 </div>
 </th>
 
 
 
+<!--
 <th>
   NUMBER OF COMPONENTS
   <div style='border: solid 1px'>

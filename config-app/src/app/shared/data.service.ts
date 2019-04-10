@@ -20,7 +20,9 @@ export class DataService {
 	devNumRangeObj={};
 
   compProps:any[]=[];
+	compDims:any[]=[];
   devProps:any[]=[];
+	devDims:any[]=[];
   layoutProps:any[]=[];
 	numCompRanges:any[]=[];
 	numDevRanges:any[]=[];
@@ -39,14 +41,18 @@ export class DataService {
 
   constructor (){
     this.devs=['mobile','tablet','computer','smartTv'];
+		this.compDims=["xmin","ymin","xmax","ymax"]
+		this.devDims=["xp","yp","cut_pip","cut_split","exp_carousel"]
     this.layouts=['pip','customGrid','divided','carousel'];
     this.comps=['main','video','banner','staticData','dynamicData','social','UGC','advertisement'];
+		this.criteria = ["A", "S", "E", "D"];
+		this.criteriaVal=[1,1,1,1];
     this.assignmentPos=['main','video','banner','staticData','dynamicData','social','UGC','advertisement','mobile','tablet','computer','smartTv'];
     for(var i=0;i<this.comps.length;i++){
-      this.compObj[this.comps[i]]={};
+      this.compObj[this.comps[i]]={"properties":{},"dimensions":{}};
     }
     for(var i=0;i<this.devs.length;i++){
-      this.devObj[this.devs[i]]={};
+      this.devObj[this.devs[i]]={"properties":{},"dimensions":{}};
     }
     for(var i=0;i<this.layouts.length;i++){
       this.layoutObj[this.layouts[i]]={};
@@ -61,7 +67,7 @@ export class DataService {
   addCompProp(val:any){
     this.compProps.push(val);
     for(var i=0;i<this.comps.length;i++){
-      this.compObj[this.comps[i]][val]=0;
+      this.compObj[this.comps[i]]["properties"][val]=0;
     }
 
     this.affinityMat1.push(Array(this.devProps.length).fill(0));
@@ -71,10 +77,19 @@ export class DataService {
 
 
   }
+	criteriaValueChanged(event){
+		this.criteriaVal[this.criteria.indexOf(event.srcElement.id)]=parseFloat(event.srcElement.value);
+	}
+	addCompDim(val:any){
+		this.compDims.push(val);
+    for(var i=0;i<this.comps.length;i++){
+      this.compObj[this.comps[i]]["dimensions"][val]=0;
+    }
+	}
   addDevProp(val:any){
     this.devProps.push(val);
     for(var i=0;i<this.devs.length;i++){
-      this.devObj[this.devs[i]][val]=0;
+      this.devObj[this.devs[i]]['properties'][val]=0;
     }
     for(var i=0;i<this.compProps.length;i++){
       this.affinityMat1[i].push(0);
@@ -83,6 +98,12 @@ export class DataService {
 		this.affinityMat2.splice(this.devProps.length-1+this.compProps.length,0,Array(this.layoutProps.length).fill(0));
 
   }
+	addDevDim(val:any){
+		this.devDims.push(val);
+    for(var i=0;i<this.devs.length;i++){
+      this.devObj[this.devs[i]]['dimensions'][val]=0;
+    }
+	}
   addLayoutProp(val:any){
     this.layoutProps.push(val);
     for(var i=0;i<this.layouts.length;i++){
@@ -109,11 +130,17 @@ export class DataService {
   }
 
   compPropChanged(event){
-    this.compObj[event.srcElement.id.split('_of_')[1]][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
+    this.compObj[event.srcElement.id.split('_of_')[1]]['properties'][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
   }
+	compDimChanged(event){
+		this.compObj[event.srcElement.id.split('_of_')[1]]['dimensions'][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
+	}
   devPropChanged(event){
-    this.devObj[event.srcElement.id.split('_of_')[1]][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
+    this.devObj[event.srcElement.id.split('_of_')[1]]['properties'][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
   }
+	devDimChanged(event){
+		this.devObj[event.srcElement.id.split('_of_')[1]]['dimensions'][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
+	}
   layoutPropChanged(event){
     this.layoutObj[event.srcElement.id.split('_of_')[1]][event.srcElement.id.split('_of_')[0]]=parseFloat(event.srcElement.value);
   }
@@ -170,21 +197,27 @@ export class DataService {
 		this.numDevRanges=eval(x.split(';')[7].split('=')[1]);
 		this.affinityMat4=JSON.parse(x.split(';')[8].split('=')[1]);*/
       //eval(x.target['result']);
-      this.compProps=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']);
+      this.compProps=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['properties']);
+			this.compDims=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['dimensions']);
       this.compObj=JSON.parse(x.target['result'].split(';')[0].split('=')[1]);
-      this.devProps=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']);
+      this.devProps=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['properties']);
+			this.devDims=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['dimensions']);
+
       this.devObj=JSON.parse(x.target['result'].split(';')[1].split('=')[1]);
       this.affinityMat1=JSON.parse(x.target['result'].split(';')[2].split('=')[1]);
 
+			this.criteria = eval(x.target['result'].split(';')[3].split('=')[1]);
+			this.criteriaVal = eval(x.target['result'].split(';')[4].split('=')[1]);
       //this.assignmentProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['assignment']);
       //this.assignmentObj=JSON.parse(x.target['result'].split(';')[3].split('=')[1]);
-      this.layoutProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['pip']);
+      /*this.layoutProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['pip']);
       this.layoutObj=JSON.parse(x.target['result'].split(';')[3].split('=')[1]);
       this.affinityMat2=JSON.parse(x.target['result'].split(';')[4].split('=')[1]);
 			this.numCompRanges=eval(x.target['result'].split(';')[5].split('=')[1]);
 			this.affinityMat3=JSON.parse(x.target['result'].split(';')[6].split('=')[1]);
 			this.numDevRanges=eval(x.target['result'].split(';')[7].split('=')[1]);
-			this.affinityMat4=JSON.parse(x.target['result'].split(';')[8].split('=')[1]);
+			this.affinityMat4=JSON.parse(x.target['result'].split(';')[8].split('=')[1]);*/
+
       alert("File loaded");
 
   }
@@ -215,33 +248,54 @@ export class DataService {
 	getNumDevRanges(){
 		return this.numDevRanges;
 	}
-
+	getCriteria(){
+		return this.criteria;
+	}
+	getCriteriaVal(){
+		return this.criteriaVal;
+	}
+	getCriteriaValue(c:string){
+		return this.criteriaVal[this.criteria.indexOf(c)];
+	}
   delete(event){
-    if(event.srcElement.id.indexOf('_deletefromcomps_')>0){
-      this.affinityMat1.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcomps_')[0]), 1);
+    if(event.srcElement.id.indexOf('_deletefromcompsprops_')>0){
+      this.affinityMat1.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcompsprops_')[0]), 1);
       Object.keys(this.compObj).forEach((o)=>{
-        delete this.compObj[o][event.srcElement.id.split('_deletefromcomps_')[0]];
+        delete this.compObj[o]['properties'][event.srcElement.id.split('_deletefromcompsprops_')[0]];
       });
 
-			this.affinityMat2.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcomps_')[0]),1);
+			this.affinityMat2.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcompsprops_')[0]),1);
 
-      this.compProps.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcomps_')[0]),1);
+      this.compProps.splice(this.compProps.indexOf(event.srcElement.id.split('_deletefromcompsprops_')[0]),1);
     }
-    else if(event.srcElement.id.indexOf('_deletefromdevs_')>0){
+		else if(event.srcElement.id.indexOf('_deletefromcompsdims_')>0){
+			Object.keys(this.compObj).forEach((o)=>{
+        delete this.compObj[o]['dimensions'][event.srcElement.id.split('_deletefromcompsdims_')[0]];
+      });
+			this.compDims.splice(this.compDims.indexOf(event.srcElement.id.split('_deletefromcompsdims_')[0]),1);
+		}
+    else if(event.srcElement.id.indexOf('_deletefromdevsprops_')>0){
       for(var i =0;i<this.compProps.length;i++){
-        this.affinityMat1[i].splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevs_')[0]), 1);
+        this.affinityMat1[i].splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevsprops_')[0]), 1);
       }
       var _this=this;
       Object.keys(this.devObj).forEach((ob)=>{
-        delete _this.devObj[ob][event.srcElement.id.split('_deletefromdevs_')[0]];
+        delete _this.devObj[ob]['properties'][event.srcElement.id.split('_deletefromdevsprops_')[0]];
       });
 
 
-			this.affinityMat2.splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevs_')[0])+this.compProps.length,1);
+			this.affinityMat2.splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevsprops_')[0])+this.compProps.length,1);
 
-			this.devProps.splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevs_')[0]),1);
+			this.devProps.splice(this.devProps.indexOf(event.srcElement.id.split('_deletefromdevsprops_')[0]),1);
 
     }
+		else if(event.srcElement.id.indexOf('_deletefromdevsdims_')>0){
+			Object.keys(this.devObj).forEach((ob)=>{
+        delete this.devObj[ob]['dimensions'][event.srcElement.id.split('_deletefromdevsdims_')[0]];
+      });
+			this.devDims.splice(this.devDims.indexOf(event.srcElement.id.split('_deletefromdevsdims_')[0]),1);
+
+		}
     else if(event.srcElement.id.indexOf('_deletefromlayouts_')>0){
       for(var i =0;i<(this.compProps.length+this.devProps.length+this.numCompRanges.length+this.numDevRanges.length);i++){
         this.affinityMat2[i].splice(this.layoutProps.indexOf(event.srcElement.id.split('_deletefromlayouts_')[0]), 1);

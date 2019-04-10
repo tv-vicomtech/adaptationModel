@@ -50,6 +50,9 @@ export class RunapproachComponent {
   devNumAffl:number=0;
   devTypeAffl:number=0;
   assignmentsAll:any[]=[];
+
+
+
   constructor(dataService:DataService,private http: Http){
     this.dataService=dataService;
   }
@@ -135,10 +138,10 @@ export class RunapproachComponent {
 
         _this.devsInApp.forEach((d)=>{
           var t=[];
-          for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]).length;i++){
+          for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]["properties"]).length;i++){
             var prop=0;
-            for(var j=0;j<Object.keys(_this.dataService.getDevObj()[d]).length;j++){
-              prop=prop+_this.dataService.getAffinityMat1()[i][j]*_this.dataService.getDevObj()[d][Object.keys(_this.dataService.getDevObj()[d])[j]];
+            for(var j=0;j<Object.keys(_this.dataService.getDevObj()[d]["properties"]).length;j++){
+              prop=prop+_this.dataService.getAffinityMat1()[i][j]*_this.dataService.getDevObj()[d]["properties"][Object.keys(_this.dataService.getDevObj()[d]["properties"])[j]];
             }
             t.push(prop);
           }
@@ -146,23 +149,23 @@ export class RunapproachComponent {
         });
         for(var i=0;i<translations.length;i++){
           var d:any[]=[];
-          for(var j=0;j<Object.keys(_this.dataService.getCompObj()[c]).length;j++){
-            d.push(translations[i][j]-_this.dataService.getCompObj()[c][Object.keys(_this.dataService.getCompObj()[c])[j]]);
+          for(var j=0;j<Object.keys(_this.dataService.getCompObj()[c]["properties"]).length;j++){
+            d.push(translations[i][j]-_this.dataService.getCompObj()[c]["properties"][Object.keys(_this.dataService.getCompObj()[c]["properties"])[j]]);
           }
           distances.push(d);
         }
         var sumPropComps=0;
-        for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]).length;i++){
-          sumPropComps=sumPropComps+_this.dataService.getCompObj()[c][Object.keys(_this.dataService.getCompObj()[c])[i]];
+        for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]["properties"]).length;i++){
+          sumPropComps=sumPropComps+_this.dataService.getCompObj()[c]["properties"][Object.keys(_this.dataService.getCompObj()[c]["properties"])[i]];
         }
         for(var i=0;i<distances.length;i++){
           var affd=0;
           for(var j=0;j<distances[i].length;j++){
             if(distances[i][j]>=0){
-              affd=affd+(1*_this.dataService.getCompObj()[c][Object.keys(_this.dataService.getCompObj()[c])[j]]/sumPropComps);
+              affd=affd+(1*_this.dataService.getCompObj()[c]["properties"][Object.keys(_this.dataService.getCompObj()[c]["properties"])[j]]/sumPropComps);
             }
             else{
-              affd=affd+((1+distances[i][j])*_this.dataService.getCompObj()[c][Object.keys(_this.dataService.getCompObj()[c])[j]]/sumPropComps);
+              affd=affd+((1+distances[i][j])*_this.dataService.getCompObj()[c]["properties"][Object.keys(_this.dataService.getCompObj()[c]["properties"])[j]]/sumPropComps);
             }
           }
           cInAlld.push(parseFloat(affd.toFixed(2)));
@@ -182,7 +185,7 @@ export class RunapproachComponent {
         var res = c.reduce((acc,curr,idx) => curr === max ? [...acc, idx] : acc, []);
         if(res.length>1){
             var auxArr:any=[];
-            auxArr = Object.values(this.dataService.getCompObj()[this.compsInApp[i]]);
+            auxArr = Object.values(this.dataService.getCompObj()[this.compsInApp[i]]["properties"]);
             var maxPropInd=auxArr.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
             var val=0;
             var idx=0;
@@ -361,15 +364,15 @@ export class RunapproachComponent {
     this.auxResults2Out=[];
     this.auxResults2Int=[];
     this.evStep2=0;
-    this.assignments.forEach((a)=>{
-      var aInAllL=[_this.pipFunc(a[1].length,a[0]).affLayout,
+    this.assignments.forEach((a,i)=>{
+      var aInAllL=[_this.pipFunc(a[1].length,a[0],i,"one").affLayout,
       _this.customGridFunc(a[1].length,a[0]).affLayout,
-      _this.dividedFunc(a[1].length,a[0]).affLayout,
-      _this.carouselFunc(a[1].length,a[0]).affLayout
+      _this.dividedFunc(a[1].length,a[0],i,"one").affLayout,
+      _this.carouselFunc(a[1].length,a[0],i,"one").affLayout
       ];
       _this.affResults2.push(aInAllL);
 
-      var outInAll = [_this.pipFunc(a[1].length,a[0]).outputCap,
+      /*var outInAll = [_this.pipFunc(a[1].length,a[0]).outputCap,
       _this.customGridFunc(a[1].length,a[0]).outputCap,
       _this.dividedFunc(a[1].length,a[0]).outputCap,
       _this.carouselFunc(a[1].length,a[0]).outputCap
@@ -382,7 +385,7 @@ export class RunapproachComponent {
       _this.dividedFunc(a[1].length,a[0]).interactivity,
       _this.carouselFunc(a[1].length,a[0]).interactivity
       ];
-      _this.auxResults2Int.push(intInAll);
+      _this.auxResults2Int.push(intInAll);*/
 
     });
     this.bestAffs2=[];
@@ -402,11 +405,11 @@ export class RunapproachComponent {
     this.affResults2All=[];
 
     this.evStep2All=0;
-    this.assignmentsAll.forEach((a)=>{
-      var aInAllL=[_this.pipFunc(a[1].length,a[0]).affLayout,
+    this.assignmentsAll.forEach((a,i)=>{
+      var aInAllL=[_this.pipFunc(a[1].length,a[0],i,"all").affLayout,
       _this.customGridFunc(a[1].length,a[0]).affLayout,
-      _this.dividedFunc(a[1].length,a[0]).affLayout,
-      _this.carouselFunc(a[1].length,a[0]).affLayout
+      _this.dividedFunc(a[1].length,a[0],i,"all").affLayout,
+      _this.carouselFunc(a[1].length,a[0],i,"all").affLayout
       ];
       _this.affResults2All.push(aInAllL);
 
@@ -432,8 +435,67 @@ export class RunapproachComponent {
   customGridFunc(nc,dt){
     return{'affLayout': 0, 'outputCap':0,'interactivity':0};
   }
-  dividedFunc(nc,dt){
-    if(nc==0){
+  dividedFunc(nc,dt,a,mode){
+    if(mode == "all"){
+      var assigns = this.assignmentsAll;
+    }
+    else if(mode=='one'){
+      var assigns = this.assignments;
+    }
+    var cut_split = this.dataService.getDevObj()[dt]['dimensions'].cut_split;
+    /*if(dt=='mobile'){
+      cut_split = 2;
+    }
+    else if(dt=='tablet'){
+      cut_split = 6;
+    }
+    else if(dt=='computer'){
+      cut_split = 9;
+    }
+    else if(dt=='smartTv'){
+      cut_split = 9;
+    }*/
+
+    var A_split = 1;
+
+    var S_split = Math.max(
+      0,
+      1-((nc-1)/cut_split)
+    );
+
+    var E_split = 0;
+    if(nc>0){
+      E_split = (Math.ceil(Math.sqrt(nc))*Math.round(Math.sqrt(nc))-nc)/(Math.ceil(Math.sqrt(nc))*Math.round(Math.sqrt(nc)));
+      E_split = 1-E_split;
+    }
+
+    var D_split = 0;
+    var xp=this.dataService.getDevObj()[dt]['dimensions'].xp;
+    var yp=this.dataService.getDevObj()[dt]['dimensions'].yp;
+    for(var i=0;i<assigns[a][1].length;i++){
+        var xmax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmax;
+        var ymax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymax;
+        var xmin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmin;
+        var ymin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymin;
+        var xp=this.dataService.getDevObj()[dt]['dimensions'].xp;
+
+        if((xp*Math.ceil(Math.sqrt(nc)))/(yp*Math.round(Math.sqrt(nc)))>(xmax/ymax)){
+            D_split = D_split + ((xmax/ymax)/((xp*Math.ceil(Math.sqrt(nc)))/(yp*Math.round(Math.sqrt(nc)))))
+        }
+        else if((xp*Math.ceil(Math.sqrt(nc)))/(yp*Math.round(Math.sqrt(nc)))<(xmin/ymin)){
+            D_split = D_split + (((xp*Math.ceil(Math.sqrt(nc)))/(yp*Math.round(Math.sqrt(nc))))/(xmin/ymin))
+        }
+        else{
+            D_split = D_split + 1;
+        }
+    }
+    if(nc>0){
+      D_split = D_split/nc;
+    }
+    var affLayout =parseFloat(Math.pow(A_split,this.dataService.getCriteriaValue("A"))*Math.pow(S_split,this.dataService.getCriteriaValue("S"))*Math.pow(E_split,this.dataService.getCriteriaValue("E"))*Math.pow(D_split,this.dataService.getCriteriaValue("D"))).toFixed(2);
+    return{'affLayout': affLayout};
+
+    /*if(nc==0){
       return {'affLayout': 0};
     }
     else{
@@ -485,11 +547,112 @@ export class RunapproachComponent {
       }
       var affLayout =parseFloat(((0.6*outputCap  + 0.4*interactivity ) ).toFixed(2));
       return{'affLayout': affLayout, 'outputCap':outputCap,'interactivity':interactivity};
-    }
+    }*/
 
   }
-  pipFunc(nc,dt){
-    if(nc==0){
+  pipFunc(nc,dt,a,mode){
+    if(mode == "all"){
+      var assigns = this.assignmentsAll;
+    }
+    else if(mode=='one'){
+      var assigns = this.assignments;
+    }
+    var cut_pip = this.dataService.getDevObj()[dt]['dimensions'].cut_pip;
+    /*if(dt=='mobile'){
+      cut_pip = 1;
+    }
+    else if(dt=='tablet'){
+      cut_pip = 5;
+    }
+    else if(dt=='computer'){
+      cut_pip = 8;
+    }
+    else if(dt=='smartTv'){
+      cut_pip = 8;
+    }*/
+
+    var A_pip = 0;
+    if(nc == 1){
+        A_pip = 1
+    }
+    if(nc == 2){
+        A_pip = 1 - 1/9;
+    }
+    if(nc == 3){
+        A_pip = 1 - 2/9;
+    }
+    if(nc >= 4){
+        A_pip = 1 - 1/3;
+    }
+
+    var S_pip = 0;
+    S_pip = Math.max(
+      0,
+      1-((nc-1)/cut_pip)
+    );
+
+    var E_pip = 0;
+    E_pip = 1;
+
+    var xp=this.dataService.getDevObj()[dt]['dimensions'].xp;
+    var yp=this.dataService.getDevObj()[dt]['dimensions'].yp;
+
+    var D_pip = 0;
+    if(nc>0 && nc<5){
+      for(var i=0;i<assigns[a][1].length;i++){
+        var xmax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmax;
+        var ymax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymax;
+        var xmin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmin;
+        var ymin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymin;
+
+        if((xp/yp)>(xmax/ymax)){
+            D_pip = D_pip + ((xmax/ymax)/(xp/yp));
+        }
+        else if((xp/yp)<(xmin/ymin)){
+            D_pip = D_pip + ((xp/yp)/(xmin/ymin));
+          }
+          else{
+            D_pip = D_pip + 1;
+          }
+      }
+    }
+    else if(nc>=5){
+      for(var i=0;i<assigns[a][1].length;i++){
+        var xmax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmax;
+        var ymax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymax;
+        var xmin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmin;
+        var ymin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymin;
+        if (i==1){
+            if((xp/yp)>(xmax/ymax)){
+                D_pip = D_pip + ((xmax/ymax)/(xp/yp));
+            }
+            else if((xp/yp)<(xmin/ymin)){
+                D_pip = D_pip + ((xp/yp)/(xmin/ymin));
+            }
+            else{
+                D_pip = D_pip + 1;
+            }
+        }
+        else{
+            if(((xp/yp)*(nc-1)/3)>(xmax/ymax)){
+                D_pip = D_pip + ((xmax/ymax)/((xp/yp)*(nc-1)/3));
+            }
+            else if(((xp/yp)*(nc-1)/3)<(xmin/ymin)){
+                D_pip = D_pip + (((xp/yp)*(nc-1)/3)/(xmin/ymin));
+            }
+            else{
+                D_pip = D_pip + 1;
+            }
+        }
+      }
+    }
+    if(nc>0){
+      D_pip = D_pip/nc;
+    }
+
+    var affLayout =parseFloat(Math.pow(A_pip,this.dataService.getCriteriaValue("A"))*Math.pow(S_pip,this.dataService.getCriteriaValue("S"))*Math.pow(E_pip,this.dataService.getCriteriaValue("E"))*Math.pow(D_pip,this.dataService.getCriteriaValue("D"))).toFixed(2);
+    return{'affLayout': affLayout};
+    /*if(nc==0){
       return {'affLayout': 0};
     }
     else{
@@ -551,10 +714,65 @@ export class RunapproachComponent {
 
       var affLayout =parseFloat(((0.6*outputCap  + 0.4*interactivity ) ).toFixed(2));
       return{'affLayout': affLayout, 'outputCap':outputCap,'interactivity':interactivity};
-    }
+    }*/
   }
-  carouselFunc(nc,dt){
-    if(nc==0){
+  carouselFunc(nc,dt,a,mode){
+    if(mode == "all"){
+      var assigns = this.assignmentsAll;
+    }
+    else if(mode=='one'){
+      var assigns = this.assignments;
+    }
+    var exp_carousel = this.dataService.getDevObj()[dt]['dimensions'].exp_carousel;
+
+    /*if(dt=='mobile'){
+      exp_carousel = 0.5;
+    }
+    else if(dt=='tablet'){
+      exp_carousel = 0.5;
+    }
+    else if(dt=='computer'){
+      exp_carousel = 0.5;
+    }
+    else if(dt=='smartTv'){
+      exp_carousel = 0.7;
+    }*/
+
+    var A_carousel = 0;
+    if(nc>0){
+      A_carousel = 1/(Math.pow(nc,exp_carousel));
+    }
+
+    var S_carousel = 1;
+
+    var E_carousel = 1;
+
+    var D_carousel=0;
+    var xp=this.dataService.getDevObj()[dt]['dimensions'].xp;
+    var yp=this.dataService.getDevObj()[dt]['dimensions'].yp;
+    for(var i=0;i<assigns[a][1].length;i++){
+      var xmax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmax;
+      var ymax=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymax;
+      var xmin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].xmin;
+      var ymin=this.dataService.getCompObj()[assigns[a][1][i]]['dimensions'].ymin;
+      if((xp/yp)>(xmax/ymax)){
+            D_carousel = D_carousel + ((xmax/ymax)/(xp/yp));
+      }
+      else if((xp/yp)<(xmin[i]/ymin[i])){
+            D_carousel = D_carousel + ((xp/yp)/(xmin/ymin));
+      }
+      else{
+            D_carousel = D_carousel + 1;
+      }
+    }
+    if(nc>0){
+      D_carousel = D_carousel/nc
+    }
+
+    var affLayout =parseFloat(Math.pow(A_carousel,this.dataService.getCriteriaValue("A"))*Math.pow(S_carousel,this.dataService.getCriteriaValue("S"))*Math.pow(E_carousel,this.dataService.getCriteriaValue("E"))*Math.pow(D_carousel,this.dataService.getCriteriaValue("D"))).toFixed(2);
+    return{'affLayout': affLayout};
+
+    /*if(nc==0){
       return {'affLayout': 0};
     }
     else{
@@ -577,7 +795,7 @@ export class RunapproachComponent {
       var outputCap = parseFloat(((visualized_area + shrink + empty)/3).toFixed(2));
       var affLayout =parseFloat(((0.6*outputCap  + 0.4*interactivity )).toFixed(2));
       return{'affLayout': affLayout, 'outputCap':outputCap,'interactivity':interactivity};
-    }
+    }*/
   }
   calculateStep2New(){
     this.affResults2=[];
