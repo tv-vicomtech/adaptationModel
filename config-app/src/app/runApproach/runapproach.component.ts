@@ -40,6 +40,7 @@ export class RunapproachComponent {
   bestLayoutAll:any[]=[];
 
   allResults:any[]=[];
+  allR:any[]=[];
   allEvs:any[]=[];
   maxInd:number=0;
   minInd:number=0;
@@ -457,8 +458,6 @@ export class RunapproachComponent {
         minSThres = 0.1;
         maxEThres = 0.1;
       }
-
-
 
 
       var visualized_area = 1;
@@ -992,11 +991,12 @@ export class RunapproachComponent {
   tryAllStep1(){
 
     var xhr = new XMLHttpRequest();
-    var url = "http://127.0.0.1:5002/combinations";
+    var url = "http://192.168.10.4:5002/combinations";
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
     var _this=this;
     _this.allResults=[];
+    _this.allR=[];
     _this.allEvs=[];
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -1016,7 +1016,7 @@ export class RunapproachComponent {
               }
               _this.evStep1All=((_this.evStep1All/_this.affResults1.length));
               var res=_this.calculateStep2LayoutFunctionsForAll();
-              _this.allResults.push(
+              _this.allR.push(
                 [
                 _this.assignmentsAll,
                 _this.evStep1All,
@@ -1027,10 +1027,11 @@ export class RunapproachComponent {
               _this.allEvs.push((((_this.evStep1All+_this.evStep2All)/2)));
 
             }
-            _this.allResults.sort(function(a,b){if(a[4]<b[4]){return 1};if(a[4]>b[4]){return -1;}})
+            _this.allR.sort(function(a,b){if(a[4]<b[4]){return 1};if(a[4]>b[4]){return -1;}})
             _this.allEvs.sort(function(a,b){if(a<b){return 1};if(a>b){return -1;}})
             _this.maxInd=_this.allEvs.indexOf(Math.max.apply(Math, _this.allEvs))
             _this.minInd=_this.allEvs.indexOf(Math.min.apply(Math, _this.allEvs))
+            _this.allResults=_this.allR;
         }
     }
     var data = JSON.stringify({"items":this.compsInApp,"boxes":this.devsInApp.length});
