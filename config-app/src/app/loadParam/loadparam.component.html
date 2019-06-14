@@ -47,7 +47,7 @@
       </tr>
       <br>
       <tr *ngFor='let dp of dataService.devDims'>
-        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
+        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--></td><td>{{dp}}</td><td><input #devDim id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
       </tr>
       <br>
     </table>

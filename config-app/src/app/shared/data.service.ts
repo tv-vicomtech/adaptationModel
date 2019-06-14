@@ -32,6 +32,10 @@ export class DataService {
 	affinityMat3:any[]=[];
 	affinityMat4:any[]=[];
 
+	criteria:any[]=[];
+	criteriaVal:any[]=[];
+
+
 
 	public statusObs:Observable<any>;
   private _statusObs: Observer<any>;

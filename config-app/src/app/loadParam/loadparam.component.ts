@@ -11,9 +11,9 @@ export class LoadparamComponent {
   dataService: DataService;
 
   @ViewChild('compProp') compProp: ElementRef;
-
+  @ViewChild('compDim') compDim: ElementRef;
   @ViewChild('devProp') devProp: ElementRef;
-
+  @ViewChild('devDim') devDim: ElementRef;
   @ViewChild('layoutProp') layoutProp: ElementRef;
   @ViewChild('assignmentProp') assignmentProp: ElementRef;
   @ViewChild('compNum1') compNum1: ElementRef;

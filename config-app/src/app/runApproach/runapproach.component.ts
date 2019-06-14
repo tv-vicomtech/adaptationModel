@@ -435,6 +435,83 @@ export class RunapproachComponent {
   customGridFunc(nc,dt){
     return{'affLayout': 0, 'outputCap':0,'interactivity':0};
   }
+  calculateA(nc, ni, fi, scs, ss, nt, t,exp){
+    var a11=1;
+    var a12=1;
+    var a2=1;
+
+    //a11 proporción de comps que se ven
+    if(ni == 0){
+      a11=1;
+    }
+    else{
+      if(nc>(1+ni)){
+        a11=(1+ni)/nc;
+      }
+      else{
+        a11=1;
+      }
+    }
+    //a12 overlaps
+    if(fi==0){
+      a12=1;
+    }
+    else{
+      if((nc-1)>=(fi*scs/ss)){
+        a12=1-fi;
+      }
+      else{
+        a12=1-(((nc-1)*ss)/scs);
+      }
+    }
+
+    //a2 fracción de comps que se muestran simultáneamente
+    if(nc==0){
+      a2=0
+    }
+    else{
+      a2=1/Math.pow(Math.pow((nc/nt),t),exp);
+    }
+
+    var a = a11*a12*a2;
+    return a;
+
+  }
+  calculateS(nc,scs,sc){
+    var s1=1;
+    var s2=1;
+
+    //s1 reducción
+    s1 = Math.max(0,(1-((nc-1)/(scs/sc))));
+    //s2 distorsión/deformación no afecta
+    s2 = 1;
+
+    var s=s1*s2;
+    return s;
+
+  }
+  calculateE(nc,fi,t)
+  {
+    var e=1;
+    //carousel
+    if(t==1){
+      e=1;
+    }
+    //pip
+    else if(fi>0){
+      e=1;
+    }
+    //split
+    else{
+      if(nc==0){
+        e=0;
+      }
+      else{
+        e =1-(Math.ceil(Math.sqrt(nc))*Math.round(Math.sqrt(nc))-nc)/(Math.ceil(Math.sqrt(nc))*Math.round(Math.sqrt(nc)));
+      }
+    }
+    return e;
+  }
   dividedFunc(nc,dt,a,mode){
     if(mode == "all"){
       var assigns = this.assignmentsAll;
@@ -442,7 +519,40 @@ export class RunapproachComponent {
     else if(mode=='one'){
       var assigns = this.assignments;
     }
-    var cut_split = this.dataService.getDevObj()[dt]['dimensions'].cut_split;
+    //**************************************fórmula única
+
+
+    if(dt=='mobile'){
+      var sc = 0.5;
+    }
+    else if(dt=='tablet'){
+      var sc = 0.16;
+    }
+    else if(dt=='computer'){
+      var sc = 0.11;
+    }
+    else if(dt=='smartTv'){
+      var sc = 0.11;
+    }
+
+    var fi=0;
+    var ni=0;
+    var ss=0.11;
+    var t=0;
+    var nt=1;
+    //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
+    //ni=fi*S/ss
+    var A_split = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    //(nc, screensize, mincompsize)
+    var S_split = this.calculateS(nc, 1, sc);
+    //(nc, fracción para insertos, temporal)
+    var E_split = this.calculateE(nc,fi,t);
+
+    var affLayout =Math.pow(A_split,this.dataService.getCriteriaValue("A"))*Math.pow(S_split,this.dataService.getCriteriaValue("S"))*Math.pow(E_split,this.dataService.getCriteriaValue("E"))*1;
+    return{'affLayout': affLayout};
+
+    //***************************************diferentes criterios para cada layout
+    //var cut_split = this.dataService.getDevObj()[dt]['dimensions'].cut_split;
     /*if(dt=='mobile'){
       cut_split = 2;
     }
@@ -456,7 +566,7 @@ export class RunapproachComponent {
       cut_split = 9;
     }*/
 
-    var A_split = 1;
+    /*var A_split = 1;
 
     var S_split = Math.max(
       0,
@@ -492,9 +602,11 @@ export class RunapproachComponent {
     if(nc>0){
       D_split = D_split/nc;
     }
-    var affLayout =parseFloat(Math.pow(A_split,this.dataService.getCriteriaValue("A"))*Math.pow(S_split,this.dataService.getCriteriaValue("S"))*Math.pow(E_split,this.dataService.getCriteriaValue("E"))*Math.pow(D_split,this.dataService.getCriteriaValue("D"))).toFixed(2);
-    return{'affLayout': affLayout};
+    var affLayout =Math.pow(A_split,this.dataService.getCriteriaValue("A"))*Math.pow(S_split,this.dataService.getCriteriaValue("S"))*Math.pow(E_split,this.dataService.getCriteriaValue("E"))*Math.pow(D_split,this.dataService.getCriteriaValue("D"));
+    return{'affLayout': affLayout};*/
 
+
+    //*********************************Anterior
     /*if(nc==0){
       return {'affLayout': 0};
     }
@@ -557,7 +669,47 @@ export class RunapproachComponent {
     else if(mode=='one'){
       var assigns = this.assignments;
     }
-    var cut_pip = this.dataService.getDevObj()[dt]['dimensions'].cut_pip;
+
+    //************************************************función única
+    //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
+
+
+
+    if(dt=='mobile'){
+      var sc = 0.5;
+      var ni = 0;
+    }
+    else if(dt=='tablet'){
+      var sc = 0.16;
+      var ni = 2;
+    }
+    else if(dt=='computer'){
+      var sc = 0.11;
+      var ni = 5;
+    }
+    else if(dt=='smartTv'){
+      var sc = 0.11;
+      var ni = 8;
+    }
+
+    var fi=0.33;
+    var ss=0.11;
+    var t=0;
+    var nt=1;
+    //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
+    //ni=fi*S/ss
+
+    var A_pip = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    //(nc, screensize, mincompsize)
+    var S_pip = this.calculateS(nc, 1, sc);
+    //(nc, fracción para insertos, temporal)
+    var E_pip = this.calculateE(nc,fi,t);
+
+    var affLayout =Math.pow(A_pip,this.dataService.getCriteriaValue("A"))*Math.pow(S_pip,this.dataService.getCriteriaValue("S"))*Math.pow(E_pip,this.dataService.getCriteriaValue("E"))*1;
+    return{'affLayout': affLayout};
+
+    //*************************************diferentes criterios para cada layout
+    //var cut_pip = this.dataService.getDevObj()[dt]['dimensions'].cut_pip;
     /*if(dt=='mobile'){
       cut_pip = 1;
     }
@@ -571,7 +723,7 @@ export class RunapproachComponent {
       cut_pip = 8;
     }*/
 
-    var A_pip = 0;
+    /*var A_pip = 0;
     if(nc == 1){
         A_pip = 1
     }
@@ -650,8 +802,11 @@ export class RunapproachComponent {
       D_pip = D_pip/nc;
     }
 
-    var affLayout =parseFloat(Math.pow(A_pip,this.dataService.getCriteriaValue("A"))*Math.pow(S_pip,this.dataService.getCriteriaValue("S"))*Math.pow(E_pip,this.dataService.getCriteriaValue("E"))*Math.pow(D_pip,this.dataService.getCriteriaValue("D"))).toFixed(2);
-    return{'affLayout': affLayout};
+    var affLayout =Math.pow(A_pip,this.dataService.getCriteriaValue("A"))*Math.pow(S_pip,this.dataService.getCriteriaValue("S"))*Math.pow(E_pip,this.dataService.getCriteriaValue("E"))*Math.pow(D_pip,this.dataService.getCriteriaValue("D"));
+    return{'affLayout': affLayout};*/
+
+
+    //*******************************************anterior
     /*if(nc==0){
       return {'affLayout': 0};
     }
@@ -723,7 +878,27 @@ export class RunapproachComponent {
     else if(mode=='one'){
       var assigns = this.assignments;
     }
-    var exp_carousel = this.dataService.getDevObj()[dt]['dimensions'].exp_carousel;
+
+
+    var sc=0.01;
+    var fi=0;
+    var ni=0;
+    var ss=0.11;
+    var t=1;
+    var nt=1;
+
+    //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
+    var A_carousel = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    //(nc, screensize, mincompsize)
+    var S_carousel = this.calculateS(nc, 1, sc);
+    //(nc, fracción para insertos, temporal)
+    var E_carousel = this.calculateE(nc,fi,t);
+
+    var affLayout =Math.pow(A_carousel,this.dataService.getCriteriaValue("A"))*Math.pow(S_carousel,this.dataService.getCriteriaValue("S"))*Math.pow(E_carousel,this.dataService.getCriteriaValue("E"))*1;
+    return{'affLayout': affLayout};
+
+    //************************************************criterios diferentes para cada layout
+    //var exp_carousel = this.dataService.getDevObj()[dt]['dimensions'].exp_carousel;
 
     /*if(dt=='mobile'){
       exp_carousel = 0.5;
@@ -738,7 +913,7 @@ export class RunapproachComponent {
       exp_carousel = 0.7;
     }*/
 
-    var A_carousel = 0;
+    /*var A_carousel = 0;
     if(nc>0){
       A_carousel = 1/(Math.pow(nc,exp_carousel));
     }
@@ -769,8 +944,10 @@ export class RunapproachComponent {
       D_carousel = D_carousel/nc
     }
 
-    var affLayout =parseFloat(Math.pow(A_carousel,this.dataService.getCriteriaValue("A"))*Math.pow(S_carousel,this.dataService.getCriteriaValue("S"))*Math.pow(E_carousel,this.dataService.getCriteriaValue("E"))*Math.pow(D_carousel,this.dataService.getCriteriaValue("D"))).toFixed(2);
+    var affLayout =Math.pow(A_carousel,this.dataService.getCriteriaValue("A"))*Math.pow(S_carousel,this.dataService.getCriteriaValue("S"))*Math.pow(E_carousel,this.dataService.getCriteriaValue("E"))*Math.pow(D_carousel,this.dataService.getCriteriaValue("D"));
     return{'affLayout': affLayout};
+
+    //*******************************************Anterior
 
     /*if(nc==0){
       return {'affLayout': 0};
