@@ -23,9 +23,9 @@
       <td><i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsprops_{{c}}'></i></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["properties"][cp]}}' (change)='compPropChanged($event)'></td>
       </tr>
       <br>
-      <tr *ngFor='let cp of dataService.compDims'>
-      <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsdims_{{c}}'></i>--></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["dimensions"][cp]}}' (change)='compDimChanged($event)'></td>
-      </tr>
+      <!--<tr *ngFor='let cp of dataService.compDims'>
+      <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsdims_{{c}}'></i>--><!--</td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["dimensions"][cp]}}' (change)='compDimChanged($event)'></td>
+      <!--</tr>-->
       <br>
     </table>
   </tr>
@@ -46,9 +46,9 @@
         <td><i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsprops_{{d}}'></i></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["properties"][dp]}}' (change)='devPropChanged($event)'></td>
       </tr>
       <br>
-      <tr *ngFor='let dp of dataService.devDims'>
-        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--></td><td>{{dp}}</td><td><input #devDim id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
-      </tr>
+      <!--<tr *ngFor='let dp of dataService.devDims'>
+        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--><!--</td><td>{{dp}}</td><td><input #devDim id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
+      </tr>-->
       <br>
     </table>
   </tr>
@@ -102,6 +102,31 @@
   </tr>
   <br>
 </table>
+
+<table>
+  <tr>Empiric parameters</tr>
+  <tr *ngFor='let c of dataService.coefs; let i=index'>
+    <td>{{c}}</td><td><input id='{{c}}' type='textbox' value='{{dataService.coefsVal[i]}}' (change)='coefsValueChanged($event)'></td>
+  </tr>
+  <br>
+</table>
+
+
+<table>
+  <tr>Device parameters</tr>
+  <tr>
+    <td></td><td>Sc</td><td></td><td>Ss</td>
+  </tr>
+  <tr *ngFor='let c of dataService.devs; let i=index'>
+    <td>{{c}}</td><td><input id='sc_{{c}}' type='textbox' value='{{dataService.Sc[i]}}' (change)='ScValueChanged($event)'></td>
+    <td>{{c}}</td><td><input id='ss_{{c}}' type='textbox' value='{{dataService.Ss[i]}}' (change)='SsValueChanged($event)'></td>
+  </tr>
+  <tr *ngFor='let c of dataService.devs; let i=index'>
+
+  </tr>
+  <br>
+</table>
+
 
 
 </div>

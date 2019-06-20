@@ -50,6 +50,7 @@ export class RunapproachComponent {
   devNumAffl:number=0;
   devTypeAffl:number=0;
   assignmentsAll:any[]=[];
+  twoStepRes:number=0;
 
 
 
@@ -141,7 +142,7 @@ export class RunapproachComponent {
           for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]["properties"]).length;i++){
             var prop=0;
             for(var j=0;j<Object.keys(_this.dataService.getDevObj()[d]["properties"]).length;j++){
-              prop=prop+_this.dataService.getAffinityMat1()[i][j]*_this.dataService.getDevObj()[d]["properties"][Object.keys(_this.dataService.getDevObj()[d]["properties"])[j]];
+              prop=prop+_this.dataService.getAffinityMat1Norm()[i][j]*_this.dataService.getDevObj()[d]["properties"][Object.keys(_this.dataService.getDevObj()[d]["properties"])[j]];
             }
             t.push(prop);
           }
@@ -183,6 +184,7 @@ export class RunapproachComponent {
       this.affResults1.forEach((c,i)=>{
         var max = c.reduce((acc,curr) => curr > acc ? curr : acc);
         var res = c.reduce((acc,curr,idx) => curr === max ? [...acc, idx] : acc, []);
+        //en caso de empate
         if(res.length>1){
             var auxArr:any=[];
             auxArr = Object.values(this.dataService.getCompObj()[this.compsInApp[i]]["properties"]);
@@ -190,14 +192,26 @@ export class RunapproachComponent {
             var val=0;
             var idx=0;
             for(var j=0;j<res.length;j++){
+
               if(j==0){
+                val=savedDistances[i][res[j]].filter(num=>num>=0).reduce((total, value) => total + value, 0);
+              }
+              else{
+                if(savedDistances[i][res[j]].filter(num=>num>=0).reduce((total, value) => total + value, 0)<val){
+                  val =savedDistances[i][res[j]].filter(num=>num>=0).reduce((total, value) => total + value, 0);
+                  idx=res[j];
+                }
+              }
+
+            /*  if(j==0){
                 val=savedDistances[i][res[j]][maxPropInd];
               }else{
                 if(savedDistances[i][res[j]][maxPropInd]>val){
                   val=savedDistances[i][res[j]][maxPropInd];
                   idx=res[j];
                 }
-              }
+              }*/
+
             }
             this.bestAffs1.push(idx);
         }
@@ -396,8 +410,8 @@ export class RunapproachComponent {
     this.bestAffs2.forEach((ba,ind)=>{
       _this.evStep2=_this.evStep2+parseFloat(_this.affResults2[ind][ba]);
     });
-    this.evStep2=parseFloat((this.evStep2/this.affResults2.length).toFixed(2));
-    this.evGlobal=parseFloat(((this.evStep1+this.evStep2)/2).toFixed(2));
+    this.evStep2=(this.evStep2/this.affResults2.length);
+    this.evGlobal=parseFloat(((this.evStep1+this.evStep2)/2));
 
   }
   calculateStep2LayoutFunctionsForAll(){
@@ -441,7 +455,7 @@ export class RunapproachComponent {
     var a2=1;
 
     //a11 proporción de comps que se ven
-    if(ni == 0){
+    /*if(ni == 0){
       a11=1;
     }
     else{
@@ -451,7 +465,9 @@ export class RunapproachComponent {
       else{
         a11=1;
       }
-    }
+    }*/
+    //a11 siempre es 1
+
     //a12 overlaps
     if(fi==0){
       a12=1;
@@ -477,12 +493,35 @@ export class RunapproachComponent {
     return a;
 
   }
-  calculateS(nc,scs,sc){
+  calculateS(nc, ni, fi, scs,sc, ss, nt, t,coef){
     var s1=1;
     var s2=1;
 
     //s1 reducción
-    s1 = Math.max(0,(1-((nc-1)/(scs/sc))));
+    if(t==1){
+      s1=scs/nt;
+    }
+    else if(ni>0){
+      if(nc<1+ni){
+        s1=(1+(fi/scs)*(nc-1))/nc;
+      }
+      else{
+        if(nc==1){
+          s1=1/coef;
+        }
+        else{
+          s1=((1+(fi/scs)*(ni-1))/(ni))/Math.pow(coef,nc-ni);
+          //s1=this.calculateS(nc-1, ni, fi, scs, sc, ss, nt, t,coef)/coef;
+        }
+      }
+    }
+    else{
+      if(scs/nc>=sc){
+        s1=scs/nc
+      }else{
+        s1=this.calculateS(nc-1, ni, fi, scs, sc, ss, nt, t,coef)/coef;
+      }
+    }
     //s2 distorsión/deformación no afecta
     s2 = 1;
 
@@ -513,6 +552,9 @@ export class RunapproachComponent {
     return e;
   }
   dividedFunc(nc,dt,a,mode){
+    if(nc==0){
+      return{'affLayout': 0};
+    }
     if(mode == "all"){
       var assigns = this.assignmentsAll;
     }
@@ -522,29 +564,34 @@ export class RunapproachComponent {
     //**************************************fórmula única
 
 
-    if(dt=='mobile'){
+    /*if(dt=='mobile'){
       var sc = 0.5;
     }
     else if(dt=='tablet'){
-      var sc = 0.16;
+      var sc = 0.25;
     }
     else if(dt=='computer'){
-      var sc = 0.11;
+      var sc = 1/6;
     }
     else if(dt=='smartTv'){
-      var sc = 0.11;
-    }
-
+      var sc = 1/6;
+    }*/
+    var sc=this.dataService.getScVal(dt);
+    var ss=this.dataService.getSsVal(dt);
+    var scs = 1;
     var fi=0;
     var ni=0;
-    var ss=0.11;
+    //var ss=sc/4;
     var t=0;
-    var nt=1;
+    var nt=Math.round(scs/sc);
+    var coef_split=4;
     //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
     //ni=fi*S/ss
-    var A_split = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    var A_split = this.calculateA(nc,ni, fi, scs, ss, nt, t,this.dataService.getCoefValue("coef_split"));
+
     //(nc, screensize, mincompsize)
-    var S_split = this.calculateS(nc, 1, sc);
+    var S_split = this.calculateS(nc,ni, fi, scs,sc, ss, nt, t, this.dataService.getCoefValue("coef_split"));
+
     //(nc, fracción para insertos, temporal)
     var E_split = this.calculateE(nc,fi,t);
 
@@ -663,6 +710,9 @@ export class RunapproachComponent {
 
   }
   pipFunc(nc,dt,a,mode){
+    if(nc==0){
+      return{'affLayout': 0};
+    }
     if(mode == "all"){
       var assigns = this.assignmentsAll;
     }
@@ -675,35 +725,38 @@ export class RunapproachComponent {
 
 
 
-    if(dt=='mobile'){
+    /*if(dt=='mobile'){
       var sc = 0.5;
-      var ni = 0;
     }
     else if(dt=='tablet'){
-      var sc = 0.16;
-      var ni = 2;
+      var sc = 0.25;
     }
     else if(dt=='computer'){
-      var sc = 0.11;
-      var ni = 5;
+      var sc = 1/6;
     }
     else if(dt=='smartTv'){
-      var sc = 0.11;
-      var ni = 8;
-    }
-
-    var fi=0.33;
-    var ss=0.11;
+      var sc = 1/6;
+    }*/
+    var sc=this.dataService.getScVal(dt);
+    var ss=this.dataService.getSsVal(dt);
+    var scs=1;
+    var fi=1/3;
+    //var ss=sc/4;
+    var ni=Math.round(fi*scs/ss);
     var t=0;
     var nt=1;
+    var coef_pip = 4;
     //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
     //ni=fi*S/ss
 
-    var A_pip = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    var A_pip = this.calculateA(nc,ni, fi, scs, ss, nt, t,this.dataService.getCoefValue("coef_pip"));
+    console.log('A_pip:',A_pip);
     //(nc, screensize, mincompsize)
-    var S_pip = this.calculateS(nc, 1, sc);
+    var S_pip = this.calculateS(nc,ni, fi, scs, sc, ss, nt, t,this.dataService.getCoefValue("coef_pip"));
+    console.log('A_pip:',S_pip);
     //(nc, fracción para insertos, temporal)
     var E_pip = this.calculateE(nc,fi,t);
+    console.log('A_pip:',E_pip);
 
     var affLayout =Math.pow(A_pip,this.dataService.getCriteriaValue("A"))*Math.pow(S_pip,this.dataService.getCriteriaValue("S"))*Math.pow(E_pip,this.dataService.getCriteriaValue("E"))*1;
     return{'affLayout': affLayout};
@@ -872,6 +925,9 @@ export class RunapproachComponent {
     }*/
   }
   carouselFunc(nc,dt,a,mode){
+    if(nc==0){
+      return{'affLayout': 0};
+    }
     if(mode == "all"){
       var assigns = this.assignmentsAll;
     }
@@ -880,17 +936,32 @@ export class RunapproachComponent {
     }
 
 
-    var sc=0.01;
+    /*if(dt=='mobile'){
+      var sc = 0.5;
+    }
+    else if(dt=='tablet'){
+      var sc = 0.25;
+    }
+    else if(dt=='computer'){
+      var sc = 0.166666;
+    }
+    else if(dt=='smartTv'){
+      var sc = 0.166666;
+    }*/
+    var sc=this.dataService.getScVal(dt);
+    var ss=this.dataService.getSsVal(dt);
+    var scs=1;
     var fi=0;
     var ni=0;
-    var ss=0.11;
+    //var ss=sc/4;
     var t=1;
     var nt=1;
+    var coef_car=0.4;
 
     //(nc, ninsertos, fraccióninsertos, screensize, secondarycompsize, maxcompalavez, temporal,exp)
-    var A_carousel = this.calculateA(nc,ni, fi, 1, ss, nt, t,0.5);
+    var A_carousel = this.calculateA(nc,ni, fi, scs, ss, nt, t,this.dataService.getCoefValue("coef_car"));
     //(nc, screensize, mincompsize)
-    var S_carousel = this.calculateS(nc, 1, sc);
+    var S_carousel = this.calculateS(nc,ni, fi, scs,sc, ss, nt, t,this.dataService.getCoefValue("coef_car"));
     //(nc, fracción para insertos, temporal)
     var E_carousel = this.calculateE(nc,fi,t);
 
@@ -1409,6 +1480,7 @@ export class RunapproachComponent {
                 }
 
               }
+
               _this.evStep1All=((_this.evStep1All/_this.affResults1.length));
               var res=_this.calculateStep2LayoutFunctionsForAll();
               _this.allR.push(
@@ -1427,6 +1499,17 @@ export class RunapproachComponent {
             _this.maxInd=_this.allEvs.indexOf(Math.max.apply(Math, _this.allEvs))
             _this.minInd=_this.allEvs.indexOf(Math.min.apply(Math, _this.allEvs))
             _this.allResults=_this.allR;
+
+            const rows=_this.allR;
+            let csvContent = "data:text/csv;charset=utf-8,"
+              + rows.map(e => e.join(",")).join("\n");
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "my_data.csv");
+            document.body.appendChild(link); // Required for FF
+
+            link.click();
         }
     }
     var data = JSON.stringify({"items":this.compsInApp,"boxes":this.devsInApp.length});

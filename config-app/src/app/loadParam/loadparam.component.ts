@@ -94,6 +94,15 @@ export class LoadparamComponent {
   criteriaValueChanged(event){
     this.dataService.criteriaValueChanged(event);
   }
+  coefsValueChanged(event){
+    this.dataService.coefValueChanged(event);
+  }
+  ScValueChanged(event){
+    this.dataService.ScValueChanged(event);
+  }
+  SsValueChanged(event){
+    this.dataService.SsValueChanged(event);
+  }
   load(event){
     /*var data='var compProp={"main":{"attention":1,"interactivity":0},"video":{"attention":0.7,"interactivity":0.2},"banner":{"attention":0.6,"interactivity":0},"staticData":{"attention":0.5,"interactivity":0.2},"dynamicData":{"attention":0.5,"interactivity":1},"social":{"attention":0.3,"interactivity":1},"UGC":{"attention":0.3,"interactivity":1},"advertisement":{"attention":0.2,"interactivity":0}};var devProp={"mobile":{"screensize":0.2,"inputCapabilities":0.6},"tablet":{"screensize":0.4,"inputCapabilities":0.7},"computer":{"screensize":0.6,"inputCapabilities":1},"smartTv":{"screensize":1,"inputCapabilities":0.2}};var affinityMat=[[1,0.1],[0.2,1]];var layoutProp={"pip":{"scroll":0,"overlap":1,"emptySpace":0},"customGrid":{"scroll":0.7,"overlap":0,"emptySpace":0.7},"divided":{"scroll":0,"overlap":0,"emptySpace":0.7},"carousel":{"scroll":1,"overlap":0.9,"emptySpace":0.1}};var affinityMat2=[[0.1,0.1,0.5],[1,1,1],[0,0,1],[0,0,1]];var numCompRanges=["0","1","2","3","4","5","6","7","8","+"];var affinityMat3=[[1,1,1,1],[1,0,1,1],[0.9,0,1,0.8],[0.9,0,0.7,0.7],[0.9,0,0.9,0.8],[0.8,0,0.6,0.8],[0.6,0,0.8,0.9],[0.4,0,0.5,0.9],[0.2,0,0.4,0.5],[0.1,0,0.4,0.5]];var numDevRanges=["1","+"];var affinityMat4=[[1,0,1,1],[0.9,0,1,0.8]];'
     this.dataService.load(data);*/
@@ -113,7 +122,12 @@ export class LoadparamComponent {
     ";var devProp="+JSON.stringify(this.dataService.getDevObj())+
     ";var affinityMat="+JSON.stringify(this.dataService.getAffinityMat1())+
     ";var criteria="+JSON.stringify(this.dataService.getCriteria())+
-    ";var criteriaVal="+JSON.stringify(this.dataService.getCriteriaVal())+";";
+    ";var criteriaVal="+JSON.stringify(this.dataService.getCriteriaVal())+
+    ";var coefs="+JSON.stringify(this.dataService.getCoefs())+
+    ";var coefsVal="+JSON.stringify(this.dataService.getCoefsVal())+
+    ";var Sc="+JSON.stringify(this.dataService.getSc())+
+    ";var Ss="+JSON.stringify(this.dataService.getSs())+";";
+
     var blob = new Blob([data], { type: "application/js" });
       var url = window.URL.createObjectURL(blob);
 

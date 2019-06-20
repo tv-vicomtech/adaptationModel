@@ -28,13 +28,17 @@ export class DataService {
 	numDevRanges:any[]=[];
 
   affinityMat1:any[]=[];
+	affinityMat1Norm:any[]=[];
   affinityMat2:any[]=[];
 	affinityMat3:any[]=[];
 	affinityMat4:any[]=[];
 
 	criteria:any[]=[];
 	criteriaVal:any[]=[];
-
+	coefs:any[]=[];
+	coefsVal:any[]=[];
+	Sc:any[]=[];
+	Ss:any[]=[];
 
 
 	public statusObs:Observable<any>;
@@ -50,6 +54,10 @@ export class DataService {
     this.layouts=['pip','customGrid','divided','carousel'];
     this.comps=['main','video','banner','staticData','dynamicData','social','UGC','advertisement'];
 		this.criteria = ["A", "S", "E", "D"];
+		this.Sc = [1,1,1,1];
+		this.Ss = [1,1,1,1];
+		this.coefs = ["coef_car", "coef_pip", "coef_split"]
+		this.coefsVal=[1,1,1];
 		this.criteriaVal=[1,1,1,1];
     this.assignmentPos=['main','video','banner','staticData','dynamicData','social','UGC','advertisement','mobile','tablet','computer','smartTv'];
     for(var i=0;i<this.comps.length;i++){
@@ -75,7 +83,7 @@ export class DataService {
     }
 
     this.affinityMat1.push(Array(this.devProps.length).fill(0));
-
+		this.affinityMat1Norm.push(Array(this.devProps.length).fill(0));
 
 		this.affinityMat2.splice(this.compProps.length-1,0,Array(this.layoutProps.length).fill(0));
 
@@ -83,6 +91,15 @@ export class DataService {
   }
 	criteriaValueChanged(event){
 		this.criteriaVal[this.criteria.indexOf(event.srcElement.id)]=parseFloat(event.srcElement.value);
+	}
+	coefValueChanged(event){
+		this.coefsVal[this.coefs.indexOf(event.srcElement.id)]=parseFloat(event.srcElement.value);
+	}
+	ScValueChanged(event){
+		this.Sc[this.devs.indexOf(event.srcElement.id.split('sc_')[1])]=parseFloat(event.srcElement.value);
+	}
+	SsValueChanged(event){
+		this.Ss[this.devs.indexOf(event.srcElement.id.split('ss_')[1])]=parseFloat(event.srcElement.value);
 	}
 	addCompDim(val:any){
 		this.compDims.push(val);
@@ -97,6 +114,7 @@ export class DataService {
     }
     for(var i=0;i<this.compProps.length;i++){
       this.affinityMat1[i].push(0);
+			this.affinityMat1Norm[i].push(0);
     }
 
 		this.affinityMat2.splice(this.devProps.length-1+this.compProps.length,0,Array(this.layoutProps.length).fill(0));
@@ -156,6 +174,13 @@ export class DataService {
 	}*/
   matr1Changed(event){
     this.affinityMat1[this.compProps.indexOf(event.srcElement.id.split('_with_')[0])][this.devProps.indexOf(event.srcElement.id.split('_with_')[1])]=parseFloat(event.srcElement.value);
+		this.affinityMat1Norm=JSON.parse(JSON.stringify(this.affinityMat1));
+		for(var i=0;i<this.affinityMat1.length;i++){
+			var totalRow=this.affinityMat1[i].reduce((total, value) => total + value, 0);
+			this.affinityMat1Norm[i]=JSON.parse(JSON.stringify(this.affinityMat1[i])).map(num=>num/totalRow);
+		}
+
+
   }
   matr2Changed(event){
 		if(event.srcElement.id.indexOf('_cwith_')>-1){
@@ -202,16 +227,24 @@ export class DataService {
 		this.affinityMat4=JSON.parse(x.split(';')[8].split('=')[1]);*/
       //eval(x.target['result']);
       this.compProps=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['properties']);
-			this.compDims=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['dimensions']);
+			//this.compDims=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['dimensions']);
       this.compObj=JSON.parse(x.target['result'].split(';')[0].split('=')[1]);
       this.devProps=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['properties']);
-			this.devDims=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['dimensions']);
+			//this.devDims=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['dimensions']);
 
       this.devObj=JSON.parse(x.target['result'].split(';')[1].split('=')[1]);
       this.affinityMat1=JSON.parse(x.target['result'].split(';')[2].split('=')[1]);
-
+			this.affinityMat1Norm=JSON.parse(JSON.stringify(this.affinityMat1));
+			for(var i=0;i<this.affinityMat1.length;i++){
+				var totalRow=this.affinityMat1[i].reduce((total, value) => total + value, 0);
+				this.affinityMat1Norm[i]=JSON.parse(JSON.stringify(this.affinityMat1[i])).map(num=>num/totalRow);
+			}
 			this.criteria = eval(x.target['result'].split(';')[3].split('=')[1]);
 			this.criteriaVal = eval(x.target['result'].split(';')[4].split('=')[1]);
+			this.coefs = eval(x.target['result'].split(';')[5].split('=')[1]);
+			this.coefsVal = eval(x.target['result'].split(';')[6].split('=')[1]);
+			this.Sc=eval(x.target['result'].split(';')[7].split('=')[1]);
+			this.Ss=eval(x.target['result'].split(';')[8].split('=')[1]);
       //this.assignmentProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['assignment']);
       //this.assignmentObj=JSON.parse(x.target['result'].split(';')[3].split('=')[1]);
       /*this.layoutProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['pip']);
@@ -233,6 +266,9 @@ export class DataService {
   }
   getAffinityMat1(){
     return this.affinityMat1;
+  }
+	getAffinityMat1Norm(){
+    return this.affinityMat1Norm;
   }
   getLayoutObj(){
     return this.layoutObj;
@@ -258,8 +294,30 @@ export class DataService {
 	getCriteriaVal(){
 		return this.criteriaVal;
 	}
+	getCoefs(){
+		return this.coefs;
+	}
+	getCoefsVal(){
+		return this.coefsVal;
+	}
+	getSc(){
+		return this.Sc;
+	}
+	getSs(){
+		return this.Ss;
+	}
+	getScVal(c:string){
+		return this.Sc[this.devs.indexOf(c)];
+	}
+	getSsVal(c:string){
+		return this.Ss[this.devs.indexOf(c)];
+	}
+
 	getCriteriaValue(c:string){
 		return this.criteriaVal[this.criteria.indexOf(c)];
+	}
+	getCoefValue(c:string){
+		return this.coefsVal[this.coefs.indexOf(c)];
 	}
   delete(event){
     if(event.srcElement.id.indexOf('_deletefromcompsprops_')>0){

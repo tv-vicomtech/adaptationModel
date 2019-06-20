@@ -130,6 +130,21 @@
           </tr>
         </table>
 
+        <table *ngIf='evGlobal==ar[4]' style='border: 1px solid black;background:blue;'>
+          <tr style='border: 1px solid black'>
+            <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td><td style='border: 1px solid black'>Layout</td><td style='border: 1px solid black'>Step1</td><td style='border: 1px solid black'>Step2</td><td style='border: 1px solid black'>Global</td>
+          </tr>
+          <tr style='border: 1px solid black' *ngFor='let a of ar[0]; let i=index;'>
+            <td style='border: 1px solid black'>Assignment {{i}}</td>
+            <td style='border: 1px solid black'>{{a[0]}}</td>
+            <td style='border: 1px solid black'>{{a[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[2][i]}}</td>
+            <td style='border: 1px solid black'>{{ar[1]}}</td>
+            <td style='border: 1px solid black'>{{ar[3]}}</td>
+            <td style='border: 1px solid black'>{{ar[4]}}</td>
+          </tr>
+        </table>
+
         <table *ngIf='j!=maxInd && j!=minInd' style='border: 1px solid black;'>
           <tr style='border: 1px solid black'>
             <td style='border: 1px solid black'>Assignment</td><td style='border: 1px solid black'>Device</td><td style='border: 1px solid black'>Components</td><td style='border: 1px solid black'>Layout</td><td style='border: 1px solid black'>Step1</td><td style='border: 1px solid black'>Step2</td><td style='border: 1px solid black'>Global</td>
