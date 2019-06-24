@@ -63,13 +63,13 @@
         <tr style='border: 1px solid black' *ngFor='let c of compsInApp; let i=index;'>
             <td style='border: 1px solid black'>{{c}}</td>
             <td style='border: 1px solid black' *ngFor='let d of devsInApp;let j=index;'>
-              <div *ngIf='affResults1[i] && affResults1[i][j]&& j==bestAffs1[i]' style='background-color:green;'>{{affResults1[i][j]}}</div>
-              <div *ngIf='affResults1[i] && affResults1[i][j]&& j!=bestAffs1[i]' >{{affResults1[i][j]}}</div>
+              <div *ngIf='affResults1[i] && affResults1[i][j]&& j==bestAffs1[i]' style='background-color:green;'>{{affResults1[i][j].toFixed(5)}}</div>
+              <div *ngIf='affResults1[i] && affResults1[i][j]&& j!=bestAffs1[i]' >{{affResults1[i][j].toFixed(5)}}</div>
 
             </td>
         </tr>
       </table>
-      <div>Step 1 evaluation: {{evStep1}}</div>
+      <div>Step 1 evaluation: {{evStep1.toFixed(5)}}</div>
       <br><br>
     <div  >
       <table style='border: 1px solid black'>
@@ -93,8 +93,8 @@
       <tr style='border: 1px solid black' *ngFor='let a of assignments; let i=index;'>
           <td style='border: 1px solid black'>Assignment {{i}} </td>
           <td style='border: 1px solid black' *ngFor='let l of dataService.layouts;let j=index;'>
-            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j==bestAffs2[i]' style='background-color:green;'>{{affResults2[i][j]}}</div>
-            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j!=bestAffs2[i]' >{{affResults2[i][j]}}</div>
+            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j==bestAffs2[i]' style='background-color:green;'>{{affResults2[i][j].toFixed(5)}}</div>
+            <div *ngIf='affResults2[i] && (affResults2[i][j] || affResults2[i][j]==0) && j!=bestAffs2[i]' >{{affResults2[i][j].toFixed(5)}}</div>
 
             <!--<div>O:{{auxResults2Out[i][j]}}</div>
             <div>I:{{auxResults2Int[i][j]}}</div>-->
@@ -102,11 +102,11 @@
           </td>
       </tr>
     </table>
-      <div>Step 2 evaluation: {{evStep2}}</div>
+      <div>Step 2 evaluation: {{evStep2.toFixed(5)}}</div>
 
 
   </div>
-    <div>Global evaluation: {{evGlobal}}</div>
+    <div>Global evaluation: {{evGlobal.toFixed(5)}}</div>
 
   </th>
   </tr>
@@ -124,9 +124,9 @@
             <td style='border: 1px solid black'>{{a[0]}}</td>
             <td style='border: 1px solid black'>{{a[1]}}</td>
             <td style='border: 1px solid black'>{{ar[2][i]}}</td>
-            <td style='border: 1px solid black'>{{ar[1]}}</td>
-            <td style='border: 1px solid black'>{{ar[3]}}</td>
-            <td style='border: 1px solid black'>{{ar[4]}}</td>
+            <td style='border: 1px solid black'>{{ar[1].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[3].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[4].toFixed(5)}}</td>
           </tr>
         </table>
 
@@ -139,9 +139,9 @@
             <td style='border: 1px solid black'>{{a[0]}}</td>
             <td style='border: 1px solid black'>{{a[1]}}</td>
             <td style='border: 1px solid black'>{{ar[2][i]}}</td>
-            <td style='border: 1px solid black'>{{ar[1]}}</td>
-            <td style='border: 1px solid black'>{{ar[3]}}</td>
-            <td style='border: 1px solid black'>{{ar[4]}}</td>
+            <td style='border: 1px solid black'>{{ar[1].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[3].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[4].toFixed(5)}}</td>
           </tr>
         </table>
 
@@ -154,9 +154,9 @@
             <td style='border: 1px solid black'>{{a[0]}}</td>
             <td style='border: 1px solid black'>{{a[1]}}</td>
             <td style='border: 1px solid black'>{{ar[2][i]}}</td>
-            <td style='border: 1px solid black'>{{ar[1]}}</td>
-            <td style='border: 1px solid black'>{{ar[3]}}</td>
-            <td style='border: 1px solid black'>{{ar[4]}}</td>
+            <td style='border: 1px solid black'>{{ar[1].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[3].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[4].toFixed(5)}}</td>
           </tr>
         </table>
 
@@ -169,9 +169,9 @@
             <td style='border: 1px solid black'>{{a[0]}}</td>
             <td style='border: 1px solid black'>{{a[1]}}</td>
             <td style='border: 1px solid black'>{{ar[2][i]}}</td>
-            <td style='border: 1px solid black'>{{ar[1]}}</td>
-            <td style='border: 1px solid black'>{{ar[3]}}</td>
-            <td style='border: 1px solid black'>{{ar[4]}}</td>
+            <td style='border: 1px solid black'>{{ar[1].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[3].toFixed(5)}}</td>
+            <td style='border: 1px solid black'>{{ar[4].toFixed(5)}}</td>
           </tr>
         </table>
 

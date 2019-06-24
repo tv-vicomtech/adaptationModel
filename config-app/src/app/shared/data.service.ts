@@ -51,7 +51,7 @@ export class DataService {
     this.devs=['mobile','tablet','computer','smartTv'];
 		this.compDims=["xmin","ymin","xmax","ymax"]
 		this.devDims=["xp","yp","cut_pip","cut_split","exp_carousel"]
-    this.layouts=['pip','customGrid','divided','carousel'];
+    this.layouts=['pip','split','carousel'];
     this.comps=['main','video','banner','staticData','dynamicData','social','UGC','advertisement'];
 		this.criteria = ["A", "S", "E", "D"];
 		this.Sc = [1,1,1,1];

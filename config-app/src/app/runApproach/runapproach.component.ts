@@ -123,7 +123,7 @@ export class RunapproachComponent {
         _this.evStep1=_this.evStep1+parseFloat(_this.affResults1[ind][ba]);
       });
       this.evStep1=(this.evStep1/this.affResults1.length);
-      this.evStep1=parseFloat(this.evStep1.toFixed(2));
+      this.evStep1=parseFloat(this.evStep1.toFixed(5));
 
   }
   calculateStep1New(){
@@ -142,7 +142,7 @@ export class RunapproachComponent {
           for(var i=0;i<Object.keys(_this.dataService.getCompObj()[c]["properties"]).length;i++){
             var prop=0;
             for(var j=0;j<Object.keys(_this.dataService.getDevObj()[d]["properties"]).length;j++){
-              prop=prop+_this.dataService.getAffinityMat1Norm()[i][j]*_this.dataService.getDevObj()[d]["properties"][Object.keys(_this.dataService.getDevObj()[d]["properties"])[j]];
+              prop=prop+_this.dataService.getAffinityMat1()[i][j]*_this.dataService.getDevObj()[d]["properties"][Object.keys(_this.dataService.getDevObj()[d]["properties"])[j]];
             }
             t.push(prop);
           }
@@ -169,7 +169,7 @@ export class RunapproachComponent {
               affd=affd+((1+distances[i][j])*_this.dataService.getCompObj()[c]["properties"][Object.keys(_this.dataService.getCompObj()[c]["properties"])[j]]/sumPropComps);
             }
           }
-          cInAlld.push(parseFloat(affd.toFixed(2)));
+          cInAlld.push(parseFloat(affd.toFixed(5)));
         }
         savedDistances.push(distances);
         //calcular afinidad
@@ -195,6 +195,7 @@ export class RunapproachComponent {
 
               if(j==0){
                 val=savedDistances[i][res[j]].filter(num=>num>=0).reduce((total, value) => total + value, 0);
+                idx=res[j];
               }
               else{
                 if(savedDistances[i][res[j]].filter(num=>num>=0).reduce((total, value) => total + value, 0)<val){
@@ -231,7 +232,7 @@ export class RunapproachComponent {
         _this.evStep1=_this.evStep1+parseFloat(_this.affResults1[ind][ba]);
       });
       this.evStep1=(this.evStep1/this.affResults1.length);
-      this.evStep1=parseFloat(this.evStep1.toFixed(2));
+      this.evStep1=parseFloat(this.evStep1.toFixed(5));
 
   }
   calculateStep2(){
@@ -379,10 +380,10 @@ export class RunapproachComponent {
     this.auxResults2Int=[];
     this.evStep2=0;
     this.assignments.forEach((a,i)=>{
-      var aInAllL=[_this.pipFunc(a[1].length,a[0],i,"one").affLayout,
-      _this.customGridFunc(a[1].length,a[0]).affLayout,
-      _this.dividedFunc(a[1].length,a[0],i,"one").affLayout,
-      _this.carouselFunc(a[1].length,a[0],i,"one").affLayout
+      var aInAllL=[parseFloat(_this.pipFunc(a[1].length,a[0],i,"one").affLayout.toFixed(5)),
+      //_this.customGridFunc(a[1].length,a[0]).affLayout,
+      parseFloat(_this.splitFunc(a[1].length,a[0],i,"one").affLayout.toFixed(5)),
+      parseFloat(_this.carouselFunc(a[1].length,a[0],i,"one").affLayout.toFixed(5))
       ];
       _this.affResults2.push(aInAllL);
 
@@ -410,8 +411,8 @@ export class RunapproachComponent {
     this.bestAffs2.forEach((ba,ind)=>{
       _this.evStep2=_this.evStep2+parseFloat(_this.affResults2[ind][ba]);
     });
-    this.evStep2=(this.evStep2/this.affResults2.length);
-    this.evGlobal=parseFloat(((this.evStep1+this.evStep2)/2));
+    this.evStep2=parseFloat((this.evStep2/this.affResults2.length).toFixed(5));
+    this.evGlobal=parseFloat(((this.evStep1+this.evStep2)/2).toFixed(5));
 
   }
   calculateStep2LayoutFunctionsForAll(){
@@ -420,10 +421,10 @@ export class RunapproachComponent {
 
     this.evStep2All=0;
     this.assignmentsAll.forEach((a,i)=>{
-      var aInAllL=[_this.pipFunc(a[1].length,a[0],i,"all").affLayout,
-      _this.customGridFunc(a[1].length,a[0]).affLayout,
-      _this.dividedFunc(a[1].length,a[0],i,"all").affLayout,
-      _this.carouselFunc(a[1].length,a[0],i,"all").affLayout
+      var aInAllL=[parseFloat(_this.pipFunc(a[1].length,a[0],i,"all").affLayout.toFixed(5)),
+      //_this.customGridFunc(a[1].length,a[0]).affLayout,
+      parseFloat(_this.splitFunc(a[1].length,a[0],i,"all").affLayout.toFixed(5)),
+      parseFloat(_this.carouselFunc(a[1].length,a[0],i,"all").affLayout.toFixed(5))
       ];
       _this.affResults2All.push(aInAllL);
 
@@ -441,7 +442,7 @@ export class RunapproachComponent {
     this.bestAffs2All.forEach((ba,ind)=>{
       _this.evStep2All=_this.evStep2All+parseFloat(_this.affResults2All[ind][ba]);
     });
-    this.evStep2All=((this.evStep2All/this.affResults2All.length));
+    this.evStep2All=parseFloat((this.evStep2All/this.affResults2All.length).toFixed(5));
     //this.evGlobal=parseFloat(((this.evStep1+this.evStep2All)/2).toFixed(2));
     return {'all':_this.bestLayoutAll,'eval':_this.evStep2All}
 
@@ -551,7 +552,7 @@ export class RunapproachComponent {
     }
     return e;
   }
-  dividedFunc(nc,dt,a,mode){
+  splitFunc(nc,dt,a,mode){
     if(nc==0){
       return{'affLayout': 0};
     }
@@ -1481,7 +1482,7 @@ export class RunapproachComponent {
 
               }
 
-              _this.evStep1All=((_this.evStep1All/_this.affResults1.length));
+              _this.evStep1All=parseFloat((_this.evStep1All/_this.affResults1.length).toFixed(5));
               var res=_this.calculateStep2LayoutFunctionsForAll();
               _this.allR.push(
                 [
@@ -1489,7 +1490,7 @@ export class RunapproachComponent {
                 _this.evStep1All,
                 res['all'],
                 res['eval'],
-                (((_this.evStep1All+_this.evStep2All)/2))
+                parseFloat(((_this.evStep1All+_this.evStep2All)/2).toFixed(5))
               ]);
               _this.allEvs.push((((_this.evStep1All+_this.evStep2All)/2)));
 
