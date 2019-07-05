@@ -226,11 +226,28 @@ export class DataService {
 		this.numDevRanges=eval(x.split(';')[7].split('=')[1]);
 		this.affinityMat4=JSON.parse(x.split(';')[8].split('=')[1]);*/
       //eval(x.target['result']);
-      this.compProps=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['properties']);
-			//this.compDims=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['dimensions']);
+
+			this.compProps=Object.keys(JSON.parse(x.split(';')[0].split('=')[1])['main']['properties']);
+      this.compObj=JSON.parse(x.split(';')[0].split('=')[1]);
+      this.devProps=Object.keys(JSON.parse(x.split(';')[1].split('=')[1])['mobile']['properties']);
+
+      this.devObj=JSON.parse(x.split(';')[1].split('=')[1]);
+      this.affinityMat1=JSON.parse(x.split(';')[2].split('=')[1]);
+			this.affinityMat1Norm=JSON.parse(JSON.stringify(this.affinityMat1));
+			for(var i=0;i<this.affinityMat1.length;i++){
+				var totalRow=this.affinityMat1[i].reduce((total, value) => total + value, 0);
+				this.affinityMat1Norm[i]=JSON.parse(JSON.stringify(this.affinityMat1[i])).map(num=>num/totalRow);
+			}
+			this.criteria = eval(x.split(';')[3].split('=')[1]);
+			this.criteriaVal = eval(x.split(';')[4].split('=')[1]);
+			this.coefs = eval(x.split(';')[5].split('=')[1]);
+			this.coefsVal = eval(x.split(';')[6].split('=')[1]);
+			this.Sc=eval(x.split(';')[7].split('=')[1]);
+			this.Ss=eval(x.split(';')[8].split('=')[1]);
+
+			/*this.compProps=Object.keys(JSON.parse(x.target['result'].split(';')[0].split('=')[1])['main']['properties']);
       this.compObj=JSON.parse(x.target['result'].split(';')[0].split('=')[1]);
       this.devProps=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['properties']);
-			//this.devDims=Object.keys(JSON.parse(x.target['result'].split(';')[1].split('=')[1])['mobile']['dimensions']);
 
       this.devObj=JSON.parse(x.target['result'].split(';')[1].split('=')[1]);
       this.affinityMat1=JSON.parse(x.target['result'].split(';')[2].split('=')[1]);
@@ -244,7 +261,9 @@ export class DataService {
 			this.coefs = eval(x.target['result'].split(';')[5].split('=')[1]);
 			this.coefsVal = eval(x.target['result'].split(';')[6].split('=')[1]);
 			this.Sc=eval(x.target['result'].split(';')[7].split('=')[1]);
-			this.Ss=eval(x.target['result'].split(';')[8].split('=')[1]);
+			this.Ss=eval(x.target['result'].split(';')[8].split('=')[1]);*/
+
+			
       //this.assignmentProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['assignment']);
       //this.assignmentObj=JSON.parse(x.target['result'].split(';')[3].split('=')[1]);
       /*this.layoutProps=Object.keys(JSON.parse(x.target['result'].split(';')[3].split('=')[1])['pip']);
@@ -255,7 +274,7 @@ export class DataService {
 			this.numDevRanges=eval(x.target['result'].split(';')[7].split('=')[1]);
 			this.affinityMat4=JSON.parse(x.target['result'].split(';')[8].split('=')[1]);*/
 
-      alert("File loaded");
+      //alert("File loaded");
 
   }
   getCompObj(){
