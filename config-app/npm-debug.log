@@ -7,7 +7,7 @@
 6 silly lifecycle config-app@0.0.0~prestart: no script for prestart, continuing
 7 info lifecycle config-app@0.0.0~start: config-app@0.0.0
 8 verbose lifecycle config-app@0.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle config-app@0.0.0~start: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/home/VICOMTECH/adominguez/adaptationModel/config-app/node_modules/.bin:/usr/local/bin:/home/VICOMTECH/adominguez/bin:/home/VICOMTECH/adominguez/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+9 verbose lifecycle config-app@0.0.0~start: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/home/VICOMTECH/adominguez/adaptationModel/config-app/node_modules/.bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 10 verbose lifecycle config-app@0.0.0~start: CWD: /home/VICOMTECH/adominguez/adaptationModel/config-app
 11 silly lifecycle config-app@0.0.0~start: Args: [ '-c', 'ng serve --host 192.168.10.4' ]
 12 silly lifecycle config-app@0.0.0~start: Returned: code: 3  signal: null
@@ -24,7 +24,7 @@
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:215:5)
 15 verbose pkgid config-app@0.0.0
 16 verbose cwd /home/VICOMTECH/adominguez/adaptationModel/config-app
-17 error Linux 4.15.0-46-generic
+17 error Linux 4.15.0-54-generic
 18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 19 error node v6.4.0
 20 error npm  v3.10.3

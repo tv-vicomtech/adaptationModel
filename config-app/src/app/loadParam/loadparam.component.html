@@ -23,9 +23,6 @@
       <td><i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsprops_{{c}}'></i></td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["properties"][cp]}}' (change)='compPropChanged($event)'></td>
       </tr>
       <br>
-      <!--<tr *ngFor='let cp of dataService.compDims'>
-      <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{cp}}_deletefromcompsdims_{{c}}'></i>--><!--</td>  <td>{{cp}}</td><td><input id='{{cp}}_of_{{c}}' type='textbox' value='{{dataService.compObj[c]["dimensions"][cp]}}' (change)='compDimChanged($event)'></td>
-      <!--</tr>-->
       <br>
     </table>
   </tr>
@@ -46,9 +43,6 @@
         <td><i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsprops_{{d}}'></i></td><td>{{dp}}</td><td><input id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["properties"][dp]}}' (change)='devPropChanged($event)'></td>
       </tr>
       <br>
-      <!--<tr *ngFor='let dp of dataService.devDims'>
-        <td><!--<i class="fas fa-trash-alt" (click)='delete()' id='{{dp}}_deletefromdevsdims_{{d}}'></i>--><!--</td><td>{{dp}}</td><td><input #devDim id='{{dp}}_of_{{d}}' type='textbox' value='{{dataService.devObj[d]["dimensions"][dp]}}' (change)='devDimChanged($event)'></td>
-      </tr>-->
       <br>
     </table>
   </tr>
@@ -115,7 +109,7 @@
 <table>
   <tr>Device parameters</tr>
   <tr>
-    <td></td><td>Sc</td><td></td><td>Ss</td>
+    <td></td><td>S/Sc</td><td></td><td>Sc/Ss</td>
   </tr>
   <tr *ngFor='let c of dataService.devs; let i=index'>
     <td>{{c}}</td><td><input id='sc_{{c}}' type='textbox' value='{{dataService.Sc[i]}}' (change)='ScValueChanged($event)'></td>
@@ -131,130 +125,5 @@
 
 </div>
 </th>
-
-
-
-<!--
-<th>
-  NUMBER OF COMPONENTS
-  <div style='border: solid 1px'>
-  <br>
-  <input #compNum1 type='textbox'><!--to<input #compNum2 type='textbox'>-->
-  <!--<input type='button' value='add numberCompRange' (click)='addNumCompRange()'>
-  <table id='savedNumbCompRanges'>
-    <tr *ngFor='let nc of dataService.numCompRanges'>
-        <td><i class="fas fa-trash-alt" (click)='delete()' id='{{nc}}_deletefromnumbcomps_'></i></td><td>{{nc}}</td>
-        <!--<td><input id='{{nc}}_of_compRanges' (change)='compNumRangeChanged($event)' type='textbox' value="{{dataService.compNumRangeObj[nc]}}"></td>-->
-    <!--</tr>
-    <br>
-
-  </table>
-  </div>
-
-
-
-</th>
-
-<th>
-  NUMBER OF DEVICES
-  <div style='border: solid 1px'>
-  <br>
-  <input #devNum1 type='textbox'><!--to<input #devNum2 type='textbox'>-->
-  <!--<input type='button' value='add numberDevRange' (click)='addNumDevRange()'>
-  <table id='savedNumbCompRanges'>
-    <tr *ngFor='let nd of dataService.numDevRanges'>
-        <td><i class="fas fa-trash-alt" (click)='delete()' id='{{nd}}_deletefromnumbdevs_'></i></td><td>{{nd}}</td>
-        <!--<td><input id='{{nd}}_of_devRanges' (change)='devNumRangeChanged($event)' type='textbox' value="{{dataService.devNumRangeObj[nd]}}"></td>-->
-    <!--</tr>
-    <br>
-
-  </table>
-  </div>
-
-
-
-</th>
-
-
-
-
-</tr>-->
-<!--
-<tr>
-<th valign="top">
-  <br><br>
-  <div>AFFINITY MATRIX STEP2</div>
-  <div style='border: solid 1px'>
-
-      <table>
-        <tr>
-          <td></td>
-          <td *ngFor='let lp of dataService.layoutProps' style='width:25px; '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{lp}}</div></td>
-        </tr>
-
-        <tr *ngFor='let cp of dataService.compProps;let k=index;'>
-          <td>{{cp}}</td>
-          <td *ngFor='let lp of dataService.layoutProps;let j=index;' >
-            <input id='{{cp}}_cwith_{{lp}}' type='text'  style='width:25px;' value={{dataService.affinityMat2[k][j]}} (change)='matr2Changed($event)'>
-          </td>
-        </tr>
-      </table>
-
-
-
-     <table>
-        <tr>
-          <td></td>
-          <td *ngFor='let lp of dataService.layoutProps' style='width:25px; '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{lp}}</div></td>
-        </tr>
-
-        <tr *ngFor='let dp of dataService.devProps; let k=index;'>
-          <td>{{dp}}</td>
-          <td *ngFor='let lp of dataService.layoutProps;let j=index;' >
-            <input id='{{dp}}_dwith_{{lp}}' type='text'  style='width:25px;' value={{dataService.affinityMat2[k+dataService.compProps.length][j]}} (change)='matr2Changed($event)'>
-
-          </td>
-        </tr>
-      </table>
-
-
-
-      <table>
-        <tr>
-          <td></td>
-          <td *ngFor='let l of dataService.layouts' style='width:25px; '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{l}}</div></td>
-        </tr>
-
-        <tr *ngFor='let nc of dataService.numCompRanges; let k=index;'>
-          <td>{{nc}}</td>
-          <td *ngFor='let l of dataService.layouts;let j=index;' >
-            <input id='{{nc}}_ncwith_{{l}}' type='text'  style='width:25px;' value={{dataService.affinityMat3[k][j]}} (change)='matr3Changed($event)'>
-          </td>
-        </tr>
-      </table>
-
-      <table>
-        <tr>
-          <td></td>
-          <td *ngFor='let l of dataService.layouts' style='width:25px; '><div style='width:25px; writing-mode: vertical-rl;transform: rotate(180deg);'>{{l}}</div></td>
-        </tr>
-
-        <tr *ngFor='let nd of dataService.numDevRanges; let k=index;'>
-          <td>{{nd}}</td>
-          <td *ngFor='let l of dataService.layouts;let j=index;' >
-            <input id='{{nd}}_ndwith_{{l}}' type='text'  style='width:25px;' value={{dataService.affinityMat4[k][j]}} (change)='matr4Changed($event)'>
-          </td>
-        </tr>
-      </table>
-
-
-
-
-</div>
-</th>
-</tr>
--->
-
-
 
 </table>

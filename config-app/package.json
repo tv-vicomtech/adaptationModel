@@ -24,7 +24,7 @@
     "@ng-bootstrap/ng-bootstrap": "^4.0.1",
     "bootstrap": "^4.2.1",
     "core-js": "^2.5.4",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.0",
     "nstall": "^0.2.0",
     "rxjs": "~6.3.3",
     "rxjs-compat": "^6.3.3",
