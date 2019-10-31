@@ -27,6 +27,9 @@ Download source:
 ```bash
 git clone https://github.com/tv-vicomtech/adaptationModel.git
 ```
+Change to your own ip in adaptationModel/config-app/package.json (line 6)
+
+
 Install dependecies:
 
 ```bash
@@ -45,6 +48,6 @@ Start combinatoria:
 sudo python combinatorial.py
 ```
 
-##Frontend
+## Frontend
 
 Once everything is initialized the application will be available at http://ip:4200
