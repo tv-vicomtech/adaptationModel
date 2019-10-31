@@ -28,7 +28,7 @@ sudo pip install flask-cors
 git clone https://github.com/tv-vicomtech/adaptationModel.git
 ```
 * Change to your own ip in adaptationModel/config-app/package.json (line 6)
-
+* Change to your own ip in adaptationModel/config-app/src/app/runApproach/runapproach.components.ts (line 471)
 
 * Install dependecies:
 
