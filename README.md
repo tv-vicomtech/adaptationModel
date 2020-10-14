@@ -1,4 +1,4 @@
-# adaptationModel
+# adaptationMethodology
 
 A methodology to generate adaptation models for multi-device media services
 
